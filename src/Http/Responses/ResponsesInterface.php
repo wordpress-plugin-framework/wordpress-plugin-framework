@@ -12,8 +12,6 @@ use IteratorAggregate;
 
 interface ResponsesInterface extends IteratorAggregate, Countable
 {
-    public function with(ResponseInterface $response): static;
-
     public function isEmpty(): bool;
     public function isNotEmpty(): bool;
 
@@ -21,7 +19,6 @@ interface ResponsesInterface extends IteratorAggregate, Countable
     public function last(): ResponseInterface;
 
     public function filter(Closure $closure): static;
-    public function map(Closure $closure): static;
     public function sort(Closure $closure): static;
 
     public function filterByAccept(AcceptInterface $accept): static;

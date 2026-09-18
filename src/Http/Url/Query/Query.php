@@ -68,6 +68,11 @@ readonly class Query implements QueryInterface
 		return count((array) $this->query);
 	}
 
+	public function __invoke(): array|stdClass
+	{
+		return $this->query;
+	}
+
 	public function __toString(): string
 	{
 		if ($this->isEmpty()) {

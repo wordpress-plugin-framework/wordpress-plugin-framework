@@ -9,6 +9,8 @@ use Stringable;
 
 interface QueryInterface extends IteratorAggregate, Countable, Stringable
 {
+    public function __invoke(): array|stdClass;
+
     public function values(string $key): array;
 
     public function has(string $key): bool;

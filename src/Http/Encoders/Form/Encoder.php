@@ -13,49 +13,65 @@ use stdClass;
 readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $mediaType = new MediaType('application', 'x-www-form-urlencoded'),
+		protected MediaTypeInterface $contentType = new MediaType('application', 'x-www-form-urlencoded'),
 	) {
-		if (!$this->encodesMediaType($mediaType)) {
+		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
 		}
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($mediaType);
+		return new static($contentType);
 	}
 
-	public function encode(mixed $decoded): string
+	public function encode(mixed $body): string
 	{
-		if (!$this->encodesType($decoded)) {
+		if (!$this->encodesBody($body)) {
 			throw new EncoderException('does not encode');
 		}
 
-		return http_build_query($decoded, '', '&', PHP_QUERY_RFC1738);
+		return http_build_query($body, '', '&', PHP_QUERY_RFC1738);
 	}
 
-	public function encodesType(mixed $decoded): bool
+	public function encodesBody(mixed $body): bool
 	{
-		if (!is_array($decoded) && !$decoded instanceof stdClass) {
+		if (
+			!is_array($body) &&
+			!$body instanceof stdClass
+		) {
 			return false;
+		}
+
+		foreach ($body as $value) {
+			if (
+				is_null($value) ||
+				is_scalar($value)
+			) {
+				continue;
+			}
+
+			if (!$this->encodesBody($value)) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
-	public function encodesMediaType(MediaTypeInterface $mediaType): bool
+	public function encodesContentType(MediaTypeInterface $contentType): bool
 	{
-		$type = $mediaType->type();
+		$type = $contentType->type();
 		if ($type !== 'application') {
 			return false;
 		}
 
-		$subtype = $mediaType->subtype();
+		$subtype = $contentType->subtype();
 		if ($subtype !== 'x-www-form-urlencoded') {
 			return false;
 		}

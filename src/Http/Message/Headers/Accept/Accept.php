@@ -32,7 +32,7 @@ readonly class Accept implements AcceptInterface
 		return 0;
 	}
 
-	public function __tostring(): string
+	public function __toString(): string
 	{
 		return implode(', ', $this->mediaRanges);
 	}

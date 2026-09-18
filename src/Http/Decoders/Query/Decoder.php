@@ -4,9 +4,9 @@ namespace Hoo\WordPressPluginFramework\Http\Decoders\Query;
 
 readonly class Decoder implements DecoderInterface
 {
-	public function decode(string $encoded): mixed
+	public function decode(string $query): mixed
 	{
-		parse_str($encoded, $decoded);
+		parse_str($query, $decoded);
 		return $decoded;
 	}
 }

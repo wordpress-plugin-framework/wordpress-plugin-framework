@@ -18,14 +18,6 @@ readonly class Responses implements ResponsesInterface
         $this->validate($this->responses);
     }
 
-    public function with(ResponseInterface $response): static
-    {
-        $responses = $this->responses;
-        $responses[] = $response;
-
-        return new static($responses);
-    }
-
     public function first(): ResponseInterface
     {
         $key = array_key_first($this->responses);
@@ -49,13 +41,6 @@ readonly class Responses implements ResponsesInterface
     public function filter(Closure $closure): static
     {
         $responses = array_filter($this->responses, $closure);
-
-        return new static($responses);
-    }
-
-    public function map(Closure $closure): static
-    {
-        $responses = array_map($closure, $this->responses);
 
         return new static($responses);
     }
@@ -85,6 +70,11 @@ readonly class Responses implements ResponsesInterface
         );
     }
 
+    public function count(): int
+    {
+        return count($this->responses);
+    }
+
     public function isEmpty(): bool
     {
         return $this->count() === 0;
@@ -93,11 +83,6 @@ readonly class Responses implements ResponsesInterface
     public function isNotEmpty(): bool
     {
         return !$this->isEmpty();
-    }
-
-    public function count(): int
-    {
-        return count($this->responses);
     }
 
     protected function validate(array $responses): void

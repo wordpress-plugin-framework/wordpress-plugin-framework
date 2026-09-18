@@ -21,6 +21,6 @@ interface DecodersInterface extends IteratorAggregate, Countable
 	public function map(Closure $closure): static;
 	public function sort(Closure $closure): static;
 
-	public function filterByMediaType(MediaTypeInterface $mediaType): static;
-	public function mapMediaType(MediaTypeInterface $mediaType): static;
+	public function filterByContentType(MediaTypeInterface $contentType): static;
+	public function mapContentType(MediaTypeInterface $contentType): static;
 }

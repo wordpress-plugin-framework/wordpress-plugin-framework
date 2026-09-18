@@ -42,8 +42,8 @@ readonly class RequestFactory implements RequestFactoryInterface
 
 		if ($body !== null) {
 			$body = $this->parsed($method, $headers->contentType())
-				? $this->bodyFactory->createBody($contentType, $this->post)
-				: $this->bodyFactory->createBodyFromEncoded($contentType, $body);
+				? $this->bodyFactory->create($this->post, $contentType)
+				: $this->bodyFactory->createFromEncoded($body, $contentType);
 		}
 
 		return new Request($this->uuid, $method, $url, $headers, $body);

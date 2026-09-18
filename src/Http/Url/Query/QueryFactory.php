@@ -20,26 +20,33 @@ readonly class QueryFactory implements QueryFactoryInterface
 	) {
 	}
 
-	public function create(array|stdClass $query): QueryInterface
+	public function create(mixed $query): QueryInterface
 	{
-		return new Query($this->accessor, $this->encoder, $query);
+		if ($query instanceof QueryInterface) {
+			$query = $query();
+		}
+
+		$normalizedQuery = $this->normalizers->normalize($query);
+
+		return $this->query($normalizedQuery);
 	}
 
 	public function createFromEncoded(string $query): QueryInterface
 	{
-		$query = $this->decoder->decode($query);
+		$decodedQuery = $this->decoder->decode($query);
 
-		return $this->create($query);
+		return $this->create($decodedQuery);
 	}
 
-	public function createFromUnnormalized(mixed $query): QueryInterface
+	protected function query(mixed $query): QueryInterface
 	{
-		$query = $this->normalizers->normalize($query);
-
-		if (!is_array($query) && !$query instanceof stdClass) {
-			throw new QueryFactoryException('query must be an array or an object');
+		if (
+			!is_array($query) &&
+			!$query instanceof stdClass
+		) {
+			throw new QueryFactoryException('no encoder for this query');
 		}
 
-		return $this->create($query);
+		return new Query($this->accessor, $this->encoder, $query);
 	}
 }

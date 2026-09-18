@@ -111,6 +111,11 @@ readonly class Headers implements HeadersInterface
 		return new static($headers, $this->accept, null);
 	}
 
+	public function __invoke(): array
+	{
+		return $this->headers;
+	}
+
 	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->headers);

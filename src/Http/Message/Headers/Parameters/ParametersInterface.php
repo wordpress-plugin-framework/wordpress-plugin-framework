@@ -8,6 +8,8 @@ use Stringable;
 
 interface ParametersInterface extends IteratorAggregate, Countable, Stringable
 {
+	public function __invoke(): array;
+
 	public function has(string $name): bool;
 
 	public function get(string $name): ?string;

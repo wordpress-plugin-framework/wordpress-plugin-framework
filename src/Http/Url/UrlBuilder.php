@@ -7,11 +7,10 @@ use Hoo\WordPressPluginFramework\{
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,
 };
-use stdClass;
 
 readonly class UrlBuilder implements UrlBuilderInterface
 {
-	protected QueryInterface $query;
+	protected ?QueryInterface $query;
 
 	public function __construct(
 		protected QueryFactoryInterface $queryFactory,
@@ -21,51 +20,33 @@ readonly class UrlBuilder implements UrlBuilderInterface
 		protected string $path = '',
 		?QueryInterface $query = null,
 	) {
-		$this->query = $query ?? $queryFactory->create([]);
+		$this->query = $query ?? $this->queryFactory->create([]);
 	}
 
-	public function withScheme(Scheme|string $scheme): static
+	public function scheme(Scheme|string $scheme): static
 	{
-		if (!$scheme instanceof Scheme) {
-			$scheme = Scheme::create($scheme);
-		}
-
+		$scheme = $this->createScheme($scheme);
 		return new static($this->queryFactory, $scheme, $this->host, $this->port, $this->path, $this->query);
 	}
 
-	public function withHost(string $host): static
+	public function host(string $host): static
 	{
 		return new static($this->queryFactory, $this->scheme, $host, $this->port, $this->path, $this->query);
 	}
 
-	public function withPort(int $port): static
+	public function port(int $port): static
 	{
 		return new static($this->queryFactory, $this->scheme, $this->host, $port, $this->path, $this->query);
 	}
 
-	public function withoutPort(): static
-	{
-		return new static($this->queryFactory, $this->scheme, $this->host, null, $this->path, $this->query);
-	}
-
-	public function withPath(string $path): static
+	public function path(string $path): static
 	{
 		return new static($this->queryFactory, $this->scheme, $this->host, $this->port, $path, $this->query);
 	}
 
-	public function withQuery(QueryInterface|array|stdClass $query): static
+	public function query(mixed $query): static
 	{
-		if (!$query instanceof QueryInterface) {
-			$query = $this->queryFactory->create($query);
-		}
-
-		return new static($this->queryFactory, $this->scheme, $this->host, $this->port, $this->path, $query);
-	}
-
-	public function withUnnormalizedQuery(mixed $query): static
-	{
-		$query = $this->queryFactory->createFromUnnormalized($query);
-
+		$query = $this->createQuery($query);
 		return new static($this->queryFactory, $this->scheme, $this->host, $this->port, $this->path, $query);
 	}
 
@@ -80,5 +61,19 @@ readonly class UrlBuilder implements UrlBuilderInterface
 		}
 
 		return new Url($this->scheme, $this->host, $this->port, $this->path, $this->query);
+	}
+
+	protected function createScheme(Scheme|string $scheme): Scheme
+	{
+		if ($scheme instanceof Scheme) {
+			return $scheme;
+		}
+
+		return Scheme::create($scheme);
+	}
+
+	protected function createQuery(mixed $query): QueryInterface
+	{
+		return $this->queryFactory->create($query);
 	}
 }

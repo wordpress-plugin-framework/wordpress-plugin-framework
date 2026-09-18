@@ -10,29 +10,29 @@ use Hoo\WordPressPluginFramework\{
 readonly class Decoder implements DecoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $mediaType = new MediaType('application', 'octet-stream'),
+		protected MediaTypeInterface $contentType = new MediaType('application', 'octet-stream'),
 	) {
-		if (!$this->decodesMediaType($mediaType)) {
+		if (!$this->decodesContentType($contentType)) {
 			throw new DecoderException('does not decode this media type');
 		}
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($mediaType);
+		return new static($contentType);
 	}
 
-	public function decode(string $encoded): mixed
+	public function decode(string $body): mixed
 	{
-		return $encoded;
+		return $body;
 	}
 
-	public function decodesMediaType(MediaTypeInterface $mediaType): bool
+	public function decodesContentType(MediaTypeInterface $contentType): bool
 	{
 		return true;
 	}

@@ -11,6 +11,8 @@ use IteratorAggregate;
 
 interface HeadersInterface extends IteratorAggregate, Countable
 {
+	public function __invoke(): array;
+
 	public function has(string $name): bool;
 	public function get(string $name): ?string;
 

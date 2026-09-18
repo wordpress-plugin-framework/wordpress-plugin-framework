@@ -3,6 +3,8 @@
 namespace Hoo\WordPressPluginFramework\Http\Encoders\Multipart;
 
 use Hoo\WordPressPluginFramework\{
+	Http\Abnf\Rfc2046,
+	Http\Abnf\Rfc5234,
 	Http\Encoders\EncoderException,
 	Http\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
@@ -12,43 +14,43 @@ use stdClass;
 
 readonly class Encoder implements EncoderInterface
 {
-	protected MediaTypeInterface $mediaType;
+	protected MediaTypeInterface $contentType;
 
 	public function __construct(
-		MediaTypeInterface $mediaType = new MediaType('multipart', 'form-data'),
+		MediaTypeInterface $contentType = new MediaType('multipart', 'form-data'),
 	) {
-		if (!$this->encodesMediaType($mediaType)) {
+		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
 		}
 
-		$this->mediaType = $mediaType->parameters()->has('boundary')
-			? $mediaType
-			: $mediaType->withParameters(fn($parameters) => $parameters->with('boundary', bin2hex(random_bytes(16))));
+		$this->contentType = $contentType->parameters()->has('boundary') ? $contentType : $contentType->withParameters(fn($parameters) => $parameters->with('boundary', bin2hex(random_bytes(16))));
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($mediaType);
+		return new static($contentType);
 	}
 
-	public function encode(mixed $decoded): string
+	public function encode(mixed $body): string
 	{
-		if (!$this->encodesType($decoded)) {
+		if (!$this->encodesBody($body)) {
 			throw new EncoderException('does not encode');
 		}
 
-		$boundary = $this->mediaType->parameters()->get('boundary');
+		$boundary = $this->contentType->parameters()->get('boundary');
 
 		$encoded = '';
 
-		foreach ($this->parts($decoded) as [$name, $value]) {
+		foreach ($this->fields($body) as [$name, $value]) {
+			$quotedName = addcslashes($name, '"\\');
+
 			$encoded .= "--{$boundary}\r\n";
-			$encoded .= "Content-Disposition: form-data; name=\"{$name}\"\r\n";
+			$encoded .= "Content-Disposition: form-data; name=\"{$quotedName}\"\r\n";
 			$encoded .= "\r\n";
 			$encoded .= "{$value}\r\n";
 		}
@@ -56,26 +58,25 @@ readonly class Encoder implements EncoderInterface
 		return "{$encoded}--{$boundary}--\r\n";
 	}
 
-	public function encodesType(mixed $decoded): bool
+	public function encodesBody(mixed $body): bool
 	{
-		if (!is_array($decoded) && !$decoded instanceof stdClass) {
+		if (
+			!is_array($body) &&
+			!$body instanceof stdClass
+		) {
 			return false;
 		}
 
-		foreach ($decoded as $name => $value) {
-			if (preg_match('/["\r\n]/', (string) $name) === 1) {
+		if ((array) $body === []) {
+			return false;
+		}
+
+		foreach ($body as $name => $value) {
+			if (preg_match('/\A(?:(?!' . Rfc5234::SP . '|\.|\[|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', $name) !== 1) {
 				return false;
 			}
 
-			if (is_array($value) || $value instanceof stdClass) {
-				if (!$this->encodesType($value)) {
-					return false;
-				}
-
-				continue;
-			}
-
-			if (is_object($value) || is_resource($value)) {
+			if (!$this->encodesValue($value, $name)) {
 				return false;
 			}
 		}
@@ -83,27 +84,105 @@ readonly class Encoder implements EncoderInterface
 		return true;
 	}
 
-	public function encodesMediaType(MediaTypeInterface $mediaType): bool
+	public function encodesContentType(MediaTypeInterface $contentType): bool
 	{
-		return $mediaType->type() === 'multipart' && $mediaType->subtype() === 'form-data';
+		$type = $contentType->type();
+		if ($type !== 'multipart') {
+			return false;
+		}
+
+		$subtype = $contentType->subtype();
+		if ($subtype !== 'form-data') {
+			return false;
+		}
+
+		$parameters = $contentType->parameters();
+
+		$otherParameters = $parameters->without('boundary');
+		if ($otherParameters->count() !== 0) {
+			return false;
+		}
+
+		$boundary = $parameters->get('boundary');
+		if (
+			$boundary !== null &&
+			preg_match('@\A' . Rfc2046::BOUNDARY . '\z@', $boundary) !== 1
+		) {
+			return false;
+		}
+
+		return true;
 	}
 
-	protected function parts(mixed $decoded, string $prefix = ''): array
+	protected function encodesValue(mixed $value, string $name): bool
 	{
-		$parts = [];
+		if (
+			is_null($value) ||
+			is_scalar($value)
+		) {
+			$boundary = $this->contentType->parameters()->get('boundary');
 
-		foreach ($decoded as $name => $value) {
+			return !str_contains("\n{$value}", "\n--{$boundary}");
+		}
+
+		if (
+			!is_array($value) &&
+			!$value instanceof stdClass
+		) {
+			return false;
+		}
+
+		if ((array) $value === []) {
+			return false;
+		}
+
+		foreach ($value as $key => $child) {
+			if (preg_match('/\A(?:(?!\]|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', $key) !== 1) {
+				return false;
+			}
+
+			if (preg_match('/\A(?:' . Rfc5234::SP . '|' . Rfc5234::HTAB . '|\x0B|\x0C)\z/', $key) === 1) {
+				return false;
+			}
+
+			if (
+				str_starts_with($key, '__Host-') &&
+				!str_starts_with($name, '__Host-')
+			) {
+				return false;
+			}
+
+			if (
+				str_starts_with($key, '__Secure-') &&
+				!str_starts_with($name, '__Secure-')
+			) {
+				return false;
+			}
+
+			if (!$this->encodesValue($child, $name)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function fields(mixed $body, string $prefix = ''): array
+	{
+		$fields = [];
+
+		foreach ($body as $name => $value) {
 			$name = $prefix === '' ? (string) $name : "{$prefix}[{$name}]";
 
 			if (is_array($value) || $value instanceof stdClass) {
-				$parts = [...$parts, ...$this->parts($value, $name)];
+				$fields = [...$fields, ...$this->fields($value, $name)];
 
 				continue;
 			}
 
-			$parts[] = [$name, $value];
+			$fields[] = [$name, $value];
 		}
 
-		return $parts;
+		return $fields;
 	}
 }

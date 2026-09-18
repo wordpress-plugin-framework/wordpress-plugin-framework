@@ -6,11 +6,11 @@ use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\Medi
 
 interface EncoderInterface
 {
-	public function mediaType(): MediaTypeInterface;
-	public function withMediaType(MediaTypeInterface $mediaType): static;
+	public function contentType(): MediaTypeInterface;
+	public function withContentType(MediaTypeInterface $contentType): static;
 
-	public function encode(mixed $decoded): string;
+	public function encode(mixed $body): string;
 
-	public function encodesType(mixed $decoded): bool;
-	public function encodesMediaType(MediaTypeInterface $mediaType): bool;
+	public function encodesBody(mixed $body): bool;
+	public function encodesContentType(MediaTypeInterface $contentType): bool;
 }

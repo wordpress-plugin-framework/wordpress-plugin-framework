@@ -7,18 +7,18 @@ use stdClass;
 
 readonly class Encoder implements EncoderInterface
 {
-	public function encode(mixed $decoded): string
+	public function encode(mixed $query): string
 	{
-		if (!$this->encodesType($decoded)) {
+		if (!$this->encodesType($query)) {
 			throw new EncoderException('does not encode');
 		}
 
-		return http_build_query($decoded, '', '&', PHP_QUERY_RFC3986);
+		return http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 	}
 
-	protected function encodesType(mixed $decoded): bool
+	protected function encodesType(mixed $query): bool
 	{
-		if (!is_array($decoded) && !$decoded instanceof stdClass) {
+		if (!is_array($query) && !$query instanceof stdClass) {
 			return false;
 		}
 

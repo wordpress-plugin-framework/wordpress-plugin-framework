@@ -1,29 +1,30 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Body;
+namespace Hoo\WordPressPluginFramework\Http\Message\Bodies;
 
 use Hoo\WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Decoders\DecodersInterface,
 	Http\Encoders\EncodersInterface,
+	Http\Message\Body\Accessor,
+	Http\Message\Body\Body,
+	Http\Message\Body\BodyInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeFactoryInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Http\Normalizers\NormalizersInterface,
 };
 use stdClass;
 
-readonly class BodyFactory implements BodyFactoryInterface
+readonly class BodiesFactory implements BodiesFactoryInterface
 {
 	public function __construct(
 		protected AccessorInterface $accessor,
 		protected MediaTypeFactoryInterface $mediaTypeFactory,
-		protected DecodersInterface $decoders,
 		protected EncodersInterface $encoders,
 		protected NormalizersInterface $normalizers,
 	) {
 	}
 
-	public function create(mixed $body, MediaTypeInterface|string $contentType): BodyInterface
+	public function create(mixed $body, MediaTypeInterface|string ...$contentTypes): BodiesInterface
 	{
 		if ($body instanceof BodyInterface) {
 			$body = $body();
@@ -31,31 +32,35 @@ readonly class BodyFactory implements BodyFactoryInterface
 
 		$normalizedBody = $this->normalizers->normalize($body);
 
-		$contentType = $this->contentType($contentType);
+		$contentTypes = $contentTypes === [] ? $this->contentTypes($body, $normalizedBody) : array_map($this->contentType(...), $contentTypes);
 
-		$encodersByContentType = $this->encoders
-			->filter(fn($encoder) => $encoder->encodesContentType($contentType))
-			->map(fn($encoder) => $encoder->withContentType($contentType));
+		$bodies = [];
 
-		if ($encodersByContentType->isEmpty()) {
-			throw new BodyFactoryException('no encoder for this content-type');
+		foreach ($contentTypes as $contentType) {
+			$encodersByContentType = $this->encoders
+				->filter(fn($encoder) => $encoder->encodesContentType($contentType))
+				->map(fn($encoder) => $encoder->withContentType($contentType));
+
+			if ($encodersByContentType->isEmpty()) {
+				throw new BodiesFactoryException('no encoder for this content-type');
+			}
+
+			$bodies[] = $this->body($encodersByContentType, $body, $normalizedBody);
 		}
 
-		return $this->body($encodersByContentType, $body, $normalizedBody);
+		return new Bodies($bodies);
 	}
 
-	public function createFromEncoded(string $body, MediaTypeInterface|string $contentType): BodyInterface
+	protected function contentTypes(mixed $body, mixed $normalizedBody): array
 	{
-		$contentType = $this->contentType($contentType);
+		$encodersByBody = $this->encoders
+			->filter(fn($encoder) => $encoder->encodesBody($body) || $encoder->encodesBody($normalizedBody));
 
-		$decoder = $this->decoders
-			->filter(fn($decoder) => $decoder->decodesContentType($contentType))
-			->map(fn($decoder) => $decoder->withContentType($contentType))
-			->first();
+		if ($encodersByBody->isEmpty()) {
+			throw new BodiesFactoryException('no encoders for this body');
+		}
 
-		$decodedBody = $decoder->decode($body);
-
-		return $this->create($decodedBody, $contentType);
+		return $encodersByBody->contentTypes();
 	}
 
 	protected function contentType(MediaTypeInterface|string $contentType): MediaTypeInterface
@@ -88,6 +93,6 @@ readonly class BodyFactory implements BodyFactoryInterface
 			return new Body($firstEncoderByBody, $body);
 		}
 
-		throw new BodyFactoryException('no encoders for this body');
+		throw new BodiesFactoryException('no encoders for this body');
 	}
 }

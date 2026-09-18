@@ -65,14 +65,14 @@ readonly class Decoders implements DecodersInterface
 		return new static($decoders);
 	}
 
-	public function filterByMediaType(MediaTypeInterface $mediaType): static
+	public function filterByContentType(MediaTypeInterface $contentType): static
 	{
-		return $this->filter(fn($decoder) => $decoder->decodesMediaType($mediaType));
+		return $this->filter(fn($decoder) => $decoder->decodesContentType($contentType));
 	}
 
-	public function mapMediaType(MediaTypeInterface $mediaType): static
+	public function mapContentType(MediaTypeInterface $contentType): static
 	{
-		return $this->map(fn($decoder) => $decoder->withMediaType($mediaType));
+		return $this->map(fn($decoder) => $decoder->withContentType($contentType));
 	}
 
 	public function getIterator(): Traversable

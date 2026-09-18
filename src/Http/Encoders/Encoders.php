@@ -4,7 +4,6 @@ namespace Hoo\WordPressPluginFramework\Http\Encoders;
 
 use ArrayIterator;
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 use Traversable;
 
 readonly class Encoders implements EncodersInterface
@@ -15,12 +14,20 @@ readonly class Encoders implements EncodersInterface
 		$this->validate($this->encoders);
 	}
 
-	public function with(EncoderInterface $encoder): static
+	public function contentTypes(): array
 	{
-		$encoders = $this->encoders;
-		$encoders[] = $encoder;
+		$contentTypes = [];
 
-		return new static($encoders);
+		foreach ($this->encoders as $encoder) {
+			$contentType = $encoder->contentType();
+			if (in_array($contentType, $contentTypes)) {
+				continue;
+			}
+
+			$contentTypes[] = $contentType;
+		}
+
+		return $contentTypes;
 	}
 
 	public function first(): EncoderInterface
@@ -63,21 +70,6 @@ readonly class Encoders implements EncodersInterface
 		usort($encoders, $closure);
 
 		return new static($encoders);
-	}
-
-	public function filterByType(mixed $decoded): static
-	{
-		return $this->filter(fn($encoder) => $encoder->encodesType($decoded));
-	}
-
-	public function filterByMediaType(MediaTypeInterface $mediaType): static
-	{
-		return $this->filter(fn($encoder) => $encoder->encodesMediaType($mediaType));
-	}
-
-	public function mapMediaType(MediaTypeInterface $mediaType): static
-	{
-		return $this->map(fn($encoder) => $encoder->withMediaType($mediaType));
 	}
 
 	public function getIterator(): Traversable

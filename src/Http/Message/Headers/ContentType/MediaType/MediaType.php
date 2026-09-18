@@ -64,7 +64,7 @@ readonly class MediaType implements MediaTypeInterface
 		return new static($this->type, $this->subtype, $parameters);
 	}
 
-	public function __tostring(): string
+	public function __toString(): string
 	{
 		return "{$this->type}/{$this->subtype}{$this->parameters}";
 	}

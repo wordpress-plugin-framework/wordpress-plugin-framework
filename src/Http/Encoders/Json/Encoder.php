@@ -15,57 +15,69 @@ use Throwable;
 readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $mediaType = new MediaType('application', 'json'),
+		protected MediaTypeInterface $contentType = new MediaType('application', 'json'),
 	) {
-		if (!$this->encodesMediaType($mediaType)) {
+		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
 		}
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($mediaType);
+		return new static($contentType);
 	}
 
-	public function encode(mixed $decoded): string
+	public function encode(mixed $body): string
 	{
-		if (!$this->encodesType($decoded)) {
+		if (!$this->encodesBody($body)) {
 			throw new EncoderException('does not encode');
 		}
 
 		try {
-			return json_encode($decoded, JSON_THROW_ON_ERROR, 512);
+			return json_encode($body, JSON_THROW_ON_ERROR, 512);
 		} catch (Throwable $throwable) {
-			throw new EncoderException($throwable->getMessage());
+			throw new EncoderException($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
 		}
 	}
 
-	public function encodesType(mixed $decoded): bool
+	public function encodesBody(mixed $body): bool
 	{
-		if (is_resource($decoded)) {
+		if (
+			is_null($body) ||
+			is_scalar($body)
+		) {
+			return true;
+		}
+
+		if (
+			!is_array($body) &&
+			!$body instanceof stdClass
+		) {
 			return false;
 		}
 
-		if (is_object($decoded) && !$decoded instanceof stdClass) {
-			return false;
+		foreach ($body as $value) {
+			if (!$this->encodesBody($value)) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
-	public function encodesMediaType(MediaTypeInterface $mediaType): bool
+	public function encodesContentType(MediaTypeInterface $contentType): bool
 	{
-		$type = $mediaType->type();
+		$type = $contentType->type();
 		if ($type !== 'application') {
 			return false;
 		}
 
-		$subtype = $mediaType->subtype();
+		$subtype = $contentType->subtype();
 		if ($subtype !== 'json' && preg_match('/\A' . Rfc6838::RESTRICTED_NAME . '\+json\z/', $subtype) !== 1) {
 			return false;
 		}

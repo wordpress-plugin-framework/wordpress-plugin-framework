@@ -3,7 +3,9 @@
 namespace Hoo\WordPressPluginFramework\Http\Responses;
 
 use Hoo\WordPressPluginFramework\{
-	Http\Message\Body\BodyFactoryInterface,
+	Http\Message\Bodies\BodiesFactoryInterface,
+	Http\Message\Bodies\BodiesInterface,
+	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Http\Message\Headers\HeadersFactoryInterface,
 	Http\Message\Headers\HeadersInterface,
 	Http\Response\Response,
@@ -16,52 +18,30 @@ readonly class ResponsesBuilder implements ResponsesBuilderInterface
 
 	public function __construct(
 		protected HeadersFactoryInterface $headersFactory,
-		protected BodyFactoryInterface $bodyFactory,
+		protected BodiesFactoryInterface $bodiesFactory,
 		protected UuidInterface $uuid,
 		protected ?int $statusCode = null,
 		?HeadersInterface $headers = null,
-		protected array $bodies = [],
+		protected ?BodiesInterface $bodies = null,
 	) {
-		$this->headers = $headers ?? $headersFactory->create();
+		$this->headers = $headers ?? $this->headersFactory->create();
 	}
 
-	public function withStatusCode(int $statusCode): static
+	public function statusCode(int $statusCode): static
 	{
-		return new static($this->headersFactory, $this->bodyFactory, $this->uuid, $statusCode, $this->headers, $this->bodies);
+		return new static($this->headersFactory, $this->bodiesFactory, $this->uuid, $statusCode, $this->headers, $this->bodies);
 	}
 
-	public function withHeaders(HeadersInterface|array $headers): static
+	public function headers(HeadersInterface|array $headers): static
 	{
-		if (!$headers instanceof HeadersInterface) {
-			$headers = $this->headersFactory->create($headers);
-		}
-
-		return new static($this->headersFactory, $this->bodyFactory, $this->uuid, $this->statusCode, $headers, $this->bodies);
+		$headers = $this->createHeaders($headers);
+		return new static($this->headersFactory, $this->bodiesFactory, $this->uuid, $this->statusCode, $headers, $this->bodies);
 	}
 
-	public function withBodies(mixed $body): static
+	public function body(mixed $body, MediaTypeInterface|string ...$contentTypes): static
 	{
-		$bodies = [
-			...$this->bodies,
-			...$this->bodyFactory->createBodies($body),
-		];
-
-		return new static($this->headersFactory, $this->bodyFactory, $this->uuid, $this->statusCode, $this->headers, $bodies);
-	}
-
-	public function withUnnormalizedBodies(mixed $body): static
-	{
-		$bodies = [
-			...$this->bodies,
-			...$this->bodyFactory->createBodiesFromUnnormalized($body),
-		];
-
-		return new static($this->headersFactory, $this->bodyFactory, $this->uuid, $this->statusCode, $this->headers, $bodies);
-	}
-
-	public function withoutBodies(): static
-	{
-		return new static($this->headersFactory, $this->bodyFactory, $this->uuid, $this->statusCode, $this->headers, []);
+		$bodies = $this->createBodies($body, ...$contentTypes);
+		return new static($this->headersFactory, $this->bodiesFactory, $this->uuid, $this->statusCode, $this->headers, $bodies);
 	}
 
 	public function build(): ResponsesInterface
@@ -70,18 +50,30 @@ readonly class ResponsesBuilder implements ResponsesBuilderInterface
 			throw new ResponsesBuilderException('status code is mandatory');
 		}
 
-		if ($this->bodies === []) {
-			throw new ResponsesBuilderException('building representations without bodies is prohibited');
+		if ($this->bodies === null) {
+			throw new ResponsesBuilderException('body is mandatory');
 		}
 
-		$responses = new Responses();
+		$responses = [];
 
 		foreach ($this->bodies as $body) {
-			$response = new Response($this->uuid, $this->statusCode, $this->headers, $body);
-
-			$responses = $responses->with($response);
+			$responses[] = new Response($this->uuid, $this->statusCode, $this->headers, $body);
 		}
 
-		return $responses;
+		return new Responses($responses);
+	}
+
+	protected function createHeaders(HeadersInterface|array $headers): HeadersInterface
+	{
+		if ($headers instanceof HeadersInterface) {
+			return $headers;
+		}
+
+		return $this->headersFactory->create($headers);
+	}
+
+	protected function createBodies(mixed $body, MediaTypeInterface|string ...$contentTypes): BodiesInterface
+	{
+		return $this->bodiesFactory->create($body, ...$contentTypes);
 	}
 }

@@ -15,43 +15,43 @@ readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
 		protected RendererInterface $renderer,
-		protected MediaTypeInterface $mediaType = new MediaType('text', 'html'),
+		protected MediaTypeInterface $contentType = new MediaType('text', 'html'),
 	) {
-		if (!$this->encodesMediaType($mediaType)) {
+		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
 		}
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($this->renderer, $mediaType);
+		return new static($this->renderer, $contentType);
 	}
 
-	public function encode(mixed $decoded): string
+	public function encode(mixed $body): string
 	{
-		if (!$this->encodesType($decoded)) {
+		if (!$this->encodesBody($body)) {
 			throw new EncoderException('does not encode');
 		}
 
-		return $this->renderer->render($decoded);
+		return $this->renderer->render($body);
 	}
 
-	public function encodesType(mixed $decoded): bool
+	public function encodesBody(mixed $body): bool
 	{
-		if (!$decoded instanceof ViewInterface) {
+		if (!$body instanceof ViewInterface) {
 			return false;
 		}
 
 		return true;
 	}
 
-	public function encodesMediaType(MediaTypeInterface $mediaType): bool
+	public function encodesContentType(MediaTypeInterface $contentType): bool
 	{
-		return $mediaType->type() === 'text' && $mediaType->subtype() === 'html';
+		return $contentType->type() === 'text' && $contentType->subtype() === 'html';
 	}
 }

@@ -22,7 +22,12 @@ readonly class Body implements BodyInterface
 
 	public function mediaType(): MediaTypeInterface
 	{
-		return $this->encoder->mediaType();
+		return $this->encoder->contentType();
+	}
+
+	public function __invoke(): array|stdClass
+	{
+		return $this->body;
 	}
 
 	public function values(string $key): array

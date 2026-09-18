@@ -53,6 +53,11 @@ readonly class Parameters implements ParametersInterface
 		return count($this->parameters);
 	}
 
+	public function __invoke(): array
+	{
+		return $this->parameters;
+	}
+
 	public function __toString(): string
 	{
 		$parameters = '';

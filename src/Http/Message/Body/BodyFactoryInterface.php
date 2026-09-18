@@ -6,11 +6,6 @@ use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\Medi
 
 interface BodyFactoryInterface
 {
-	public function createBody(MediaTypeInterface|string $contentType, mixed $body): BodyInterface;
-	public function createBodies(mixed $body): array;
-
-	public function createBodyFromEncoded(string $contentType, string $body): BodyInterface;
-
-	public function createBodyFromUnnormalized(MediaTypeInterface|string $contentType, mixed $body): BodyInterface;
-	public function createBodiesFromUnnormalized(mixed $body): array;
+	public function create(mixed $body, MediaTypeInterface|string $contentType): BodyInterface;
+	public function createFromEncoded(string $body, MediaTypeInterface|string $contentType): BodyInterface;
 }

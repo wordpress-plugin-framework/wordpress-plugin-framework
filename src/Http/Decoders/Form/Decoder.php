@@ -12,37 +12,37 @@ use Hoo\WordPressPluginFramework\{
 readonly class Decoder implements DecoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $mediaType = new MediaType('application', 'x-www-form-urlencoded'),
+		protected MediaTypeInterface $contentType = new MediaType('application', 'x-www-form-urlencoded'),
 	) {
-		if (!$this->decodesMediaType($mediaType)) {
+		if (!$this->decodesContentType($contentType)) {
 			throw new DecoderException('does not decode this media type');
 		}
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
-		return $this->mediaType;
+		return $this->contentType;
 	}
 
-	public function withMediaType(MediaTypeInterface $mediaType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		return new static($mediaType);
+		return new static($contentType);
 	}
 
-	public function decode(string $encoded): mixed
+	public function decode(string $body): mixed
 	{
-		parse_str($encoded, $decoded);
+		parse_str($body, $decoded);
 		return $decoded;
 	}
 
-	public function decodesMediaType(MediaTypeInterface $mediaType): bool
+	public function decodesContentType(MediaTypeInterface $contentType): bool
 	{
-		$type = $mediaType->type();
+		$type = $contentType->type();
 		if ($type !== 'application') {
 			return false;
 		}
 
-		$subtype = $mediaType->subtype();
+		$subtype = $contentType->subtype();
 		if ($subtype !== 'x-www-form-urlencoded') {
 			return false;
 		}

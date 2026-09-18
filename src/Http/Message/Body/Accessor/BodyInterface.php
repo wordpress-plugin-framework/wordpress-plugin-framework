@@ -9,6 +9,8 @@ use stdClass;
 
 interface BodyInterface extends Http\Message\Body\BodyInterface, IteratorAggregate, Countable
 {
+	public function __invoke(): array|stdClass;
+
 	public function values(string $key): array;
 
 	public function has(string $key): bool;

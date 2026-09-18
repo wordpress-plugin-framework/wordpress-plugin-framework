@@ -8,4 +8,5 @@ use Stringable;
 interface BodyInterface extends Stringable
 {
     public function mediaType(): MediaTypeInterface;
+    public function __invoke(): mixed;
 }

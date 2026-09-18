@@ -5,8 +5,8 @@ namespace Hoo\WordPressPluginFramework\Http\Request;
 use Hoo\WordPressPluginFramework\{
 	Http\Message\Body\BodyFactoryInterface,
 	Http\Message\Body\BodyInterface,
-	Http\Message\Headers\HeadersFactoryInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
+	Http\Message\Headers\HeadersFactoryInterface,
 	Http\Message\Headers\HeadersInterface,
 	Http\Method\Method,
 	Http\Url\UrlFactoryInterface,
@@ -28,73 +28,75 @@ readonly class RequestBuilder implements RequestBuilderInterface
 		?HeadersInterface $headers = null,
 		protected ?BodyInterface $body = null,
 	) {
-		$this->headers = $headers ?? $headersFactory->create();
+		$this->headers = $headers ?? $this->headersFactory->create();
 	}
 
-	public function withMethod(Method|string $method): static
+	public function method(Method|string $method): static
 	{
-		if (!$method instanceof Method) {
-			$method = Method::create($method);
-		}
-
+		$method = $this->createMethod($method);
 		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $method, $this->url, $this->headers, $this->body);
 	}
 
-	public function withUrl(UrlInterface|string $url): static
+	public function url(UrlInterface|string $url): static
 	{
-		if (!$url instanceof UrlInterface) {
-			$url = $this->urlFactory->create($url);
-		}
-
+		$url = $this->createUrl($url);
 		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $this->method, $url, $this->headers, $this->body);
 	}
 
-	public function withHeaders(HeadersInterface|array $headers): static
+	public function headers(HeadersInterface|array $headers): static
 	{
-		if (!$headers instanceof HeadersInterface) {
-			$headers = $this->headersFactory->create($headers);
-		}
-
+		$headers = $this->createHeaders($headers);
 		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $this->method, $this->url, $headers, $this->body);
 	}
 
-	public function withBody(mixed $body): static
+	public function body(mixed $body, MediaTypeInterface|string $contentType): static
 	{
-		if (!$body instanceof BodyInterface) {
-			$body = $this->bodyFactory->createBody($this->contentType(), $body);
-		}
-
+		$body = $this->createBody($body, $contentType);
 		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $this->method, $this->url, $this->headers, $body);
-	}
-
-	public function withUnnormalizedBody(mixed $body): static
-	{
-		$body = $this->bodyFactory->createBodyFromUnnormalized($this->contentType(), $body);
-
-		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $this->method, $this->url, $this->headers, $body);
-	}
-
-	public function withoutBody(): static
-	{
-		return new static($this->urlFactory, $this->headersFactory, $this->bodyFactory, $this->uuid, $this->method, $this->url, $this->headers, null);
-	}
-
-	protected function contentType(): MediaTypeInterface
-	{
-		return $this->headers->contentType()
-			?? throw new RequestBuilderException('content type is mandatory to encode a body');
 	}
 
 	public function build(): RequestInterface
 	{
-		if (!$this->method instanceof Method) {
+		if ($this->method === null) {
 			throw new RequestBuilderException('method is mandatory');
 		}
 
-		if (!$this->url instanceof UrlInterface) {
+		if ($this->url === null) {
 			throw new RequestBuilderException('url is mandatory');
 		}
 
 		return new Request($this->uuid, $this->method, $this->url, $this->headers, $this->body);
+	}
+
+	protected function createMethod(Method|string $method): Method
+	{
+		if ($method instanceof Method) {
+			return $method;
+		}
+
+		return Method::create($method);
+	}
+
+	protected function createUrl(UrlInterface|string $url): UrlInterface
+	{
+		if ($url instanceof UrlInterface) {
+			return $url;
+		}
+
+		return $this->urlFactory->create($url);
+	}
+
+	protected function createHeaders(HeadersInterface|array $headers): HeadersInterface
+	{
+		if ($headers instanceof HeadersInterface) {
+			return $headers;
+		}
+
+		return $this->headersFactory->create($headers);
+	}
+
+	protected function createBody(mixed $body, MediaTypeInterface|string $contentType): BodyInterface
+	{
+		return $this->bodyFactory->create($body, $contentType);
 	}
 }
