@@ -7,6 +7,6 @@ use Stringable;
 
 interface BodyInterface extends Stringable
 {
-    public function mediaType(): MediaTypeInterface;
+    public function contentType(): MediaTypeInterface;
     public function __invoke(): mixed;
 }

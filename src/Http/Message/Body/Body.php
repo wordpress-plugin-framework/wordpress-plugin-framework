@@ -15,7 +15,7 @@ readonly class Body implements BodyInterface
 	) {
 	}
 
-	public function mediaType(): MediaTypeInterface
+	public function contentType(): MediaTypeInterface
 	{
 		return $this->encoder->contentType();
 	}

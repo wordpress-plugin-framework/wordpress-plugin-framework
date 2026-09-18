@@ -21,7 +21,7 @@ readonly class Response implements ResponseInterface
 	) {
 		$this->validateStatusCode($statusCode);
 
-		$this->headers = $body === null ? $headers : $headers->withContentType($body->mediaType());
+		$this->headers = $body === null ? $headers : $headers->withContentType($body->contentType());
 	}
 
 	public function uuid(): UuidInterface
