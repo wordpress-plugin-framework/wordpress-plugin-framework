@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Select;
+namespace WordPressPluginFramework\Database\Select;
 
-use Hoo\WordPressPluginFramework\Database\DatabaseException;
-use Hoo\WordPressPluginFramework\Database\Query\QueryInterface;
+use WordPressPluginFramework\Database\DatabaseException;
+use WordPressPluginFramework\Database\Query\QueryInterface;
 use wpdb;
 
 readonly class Select implements SelectInterface

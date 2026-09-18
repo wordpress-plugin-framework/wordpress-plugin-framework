@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
 	Pipeline\Middlewares\Validate\Validators\Comparison\Comparators\ComparatorInterface,

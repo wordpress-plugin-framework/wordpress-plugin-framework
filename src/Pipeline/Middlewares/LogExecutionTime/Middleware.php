@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\LogExecutionTime;
+namespace WordPressPluginFramework\Pipeline\Middlewares\LogExecutionTime;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Loggers\LoggerInterface,
 	Pipeline\Middlewares\MiddlewareInterface,

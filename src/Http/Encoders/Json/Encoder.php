@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders\Json;
+namespace WordPressPluginFramework\Http\Encoders\Json;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Abnf\Rfc6838,
 	Http\Encoders\EncoderException,
 	Http\Encoders\EncoderInterface,

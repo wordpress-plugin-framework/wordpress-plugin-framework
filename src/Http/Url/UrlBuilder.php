@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url;
+namespace WordPressPluginFramework\Http\Url;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Url\Query\QueryFactoryInterface,
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,

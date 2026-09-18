@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Migrator;
+namespace WordPressPluginFramework\Database\Migrator;
 
 use Exception;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Localization\Translator;
+namespace WordPressPluginFramework\Localization\Translator;
 
-use Hoo\WordPressPluginFramework\Localization\Formatter\FormatterInterface;
+use WordPressPluginFramework\Localization\Formatter\FormatterInterface;
 
 readonly class Translator implements TranslatorInterface
 {

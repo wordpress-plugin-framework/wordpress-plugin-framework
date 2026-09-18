@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Hooks;
+namespace WordPressPluginFramework\Hooks;
 
 readonly class Hooks implements HooksInterface
 {

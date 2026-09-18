@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Collection;
+namespace WordPressPluginFramework\Collection;
 
 use ArrayIterator;
 use Countable;

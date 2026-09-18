@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Exceptions\UnprocessableContent;
+namespace WordPressPluginFramework\Http\Exceptions\UnprocessableContent;
 
-use Hoo\WordPressPluginFramework\Http;
+use WordPressPluginFramework\Http;
 
 class Exception extends Http\Exceptions\Exception
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Response;
+namespace WordPressPluginFramework\Http\Response;
 
 use Exception;
 

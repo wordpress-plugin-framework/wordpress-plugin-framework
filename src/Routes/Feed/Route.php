@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes\Feed;
+namespace WordPressPluginFramework\Routes\Feed;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Routes\RouteInterface,
 	Http\Responder\ResponderInterface,
 	Http\Responder\ResponderFactoryInterface,

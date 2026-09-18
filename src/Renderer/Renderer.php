@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Renderer;
+namespace WordPressPluginFramework\Renderer;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	View\Model\ModelInterface,
 	Renderer\Escaper\EscaperInterface,
 	View\ViewInterface,

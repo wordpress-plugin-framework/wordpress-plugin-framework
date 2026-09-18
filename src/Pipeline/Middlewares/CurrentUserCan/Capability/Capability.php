@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\CurrentUserCan\Capability;
+namespace WordPressPluginFramework\Pipeline\Middlewares\CurrentUserCan\Capability;
 
 enum Capability: string
 {

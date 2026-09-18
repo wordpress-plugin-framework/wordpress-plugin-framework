@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Negotiator;
+namespace WordPressPluginFramework\Http\Negotiator;
 
 use Exception;
 

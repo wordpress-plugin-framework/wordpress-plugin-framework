@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes;
+namespace WordPressPluginFramework\Routes;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Method\Method,
 	Http\Response\ResponseFactoryInterface,
 	Pipeline\PipelineFactoryInterface,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Accept;
+namespace WordPressPluginFramework\Http\Message\Headers\Accept;
 
 interface AcceptFactoryInterface
 {

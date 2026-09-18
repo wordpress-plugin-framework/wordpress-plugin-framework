@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Cache;
+namespace WordPressPluginFramework\Cache;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Value\Value;
+use WordPressPluginFramework\Value\Value;
 
 readonly class Cache implements CacheInterface
 {

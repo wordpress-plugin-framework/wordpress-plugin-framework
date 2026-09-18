@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\RulesBuilderInterface,
 	Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
 	Pipeline\Middlewares\Validate\Validators\ValidatorInterface,

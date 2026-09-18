@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Parameters;
+namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
-use Hoo\WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\Http\Abnf\Rfc9110;
 
 readonly class ParametersFactory implements ParametersFactoryInterface
 {

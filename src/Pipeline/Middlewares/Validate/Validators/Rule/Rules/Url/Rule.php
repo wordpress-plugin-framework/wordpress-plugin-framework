@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Url;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Url;
 
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
+use WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
 
 readonly class Rule extends AbstractRule
 {

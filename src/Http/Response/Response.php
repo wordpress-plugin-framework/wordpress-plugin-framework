@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Response;
+namespace WordPressPluginFramework\Http\Response;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Body\BodyInterface,
 	Http\Message\Headers\HeadersInterface,
 	Uuid\UuidInterface,

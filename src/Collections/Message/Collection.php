@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Collections\Message;
+namespace WordPressPluginFramework\Collections\Message;
 
 use ArrayIterator;
 use Traversable;

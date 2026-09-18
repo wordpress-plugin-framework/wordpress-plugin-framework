@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares;
+namespace WordPressPluginFramework\Pipeline\Middlewares;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Pipeline\Middlewares\CurrentUserCan\Middleware as CurrentUserCanMiddleware,
 	Pipeline\Middlewares\CurrentUserCan\Capability\Capability,
 	Pipeline\Middlewares\LogExecutionTime\MiddlewareFactoryInterface as LogExecutionTimeMiddlewareFactoryInterface,

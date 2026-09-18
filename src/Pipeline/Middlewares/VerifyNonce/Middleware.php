@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\VerifyNonce;
+namespace WordPressPluginFramework\Pipeline\Middlewares\VerifyNonce;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Exceptions\Forbidden\Exception as ForbiddenException,
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\MiddlewareInterface,

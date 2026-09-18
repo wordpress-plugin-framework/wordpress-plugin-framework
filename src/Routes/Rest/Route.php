@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes\Rest;
+namespace WordPressPluginFramework\Routes\Rest;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Routes\RouteInterface,
 	Http\Responder\ResponderInterface,
 	Http\Responder\ResponderFactoryInterface,

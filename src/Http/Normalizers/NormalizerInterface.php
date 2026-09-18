@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Normalizers;
+namespace WordPressPluginFramework\Http\Normalizers;
 
 interface NormalizerInterface
 {

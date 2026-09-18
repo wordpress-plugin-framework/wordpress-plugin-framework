@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Accessor;
+namespace WordPressPluginFramework\Http\Accessor;
 
 use Exception;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
 	Pipeline\Middlewares\Validate\Validators\Comparison\Comparators\ComparatorInterface,
 	Pipeline\Middlewares\Validate\Validators\Comparison\Operator\Operator,

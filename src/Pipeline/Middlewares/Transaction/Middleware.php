@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Transaction;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Transaction;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Database\DatabaseInterface,
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\MiddlewareInterface,

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders\Query;
+namespace WordPressPluginFramework\Http\Encoders\Query;
 
-use Hoo\WordPressPluginFramework\Http\Encoders\EncoderException;
+use WordPressPluginFramework\Http\Encoders\EncoderException;
 use stdClass;
 
 readonly class Encoder implements EncoderInterface

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Normalizers\Object;
+namespace WordPressPluginFramework\Http\Normalizers\Object;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Normalizers\NormalizerException,
 	Http\Normalizers\NormalizerInterface,
 	Http\Normalizers\NormalizersInterface,

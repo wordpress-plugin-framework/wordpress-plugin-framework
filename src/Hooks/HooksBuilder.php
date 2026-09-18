@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Hooks;
+namespace WordPressPluginFramework\Hooks;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Pipeline\PipelineFactoryInterface,
 	Renderer\RendererInterface,

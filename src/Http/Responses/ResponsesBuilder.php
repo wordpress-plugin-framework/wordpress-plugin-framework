@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Responses;
+namespace WordPressPluginFramework\Http\Responses;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Bodies\BodiesFactoryInterface,
 	Http\Message\Bodies\BodiesInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,

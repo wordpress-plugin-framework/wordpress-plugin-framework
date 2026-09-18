@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Uuid;
+namespace WordPressPluginFramework\Uuid;
 
 readonly class Uuid implements UuidInterface
 {

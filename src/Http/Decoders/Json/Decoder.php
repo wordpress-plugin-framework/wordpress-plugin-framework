@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders\Json;
+namespace WordPressPluginFramework\Http\Decoders\Json;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Abnf\Rfc6838,
 	Http\Decoders\DecoderException,
 	Http\Decoders\DecoderInterface,

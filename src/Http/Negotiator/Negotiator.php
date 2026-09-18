@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Negotiator;
+namespace WordPressPluginFramework\Http\Negotiator;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Exceptions\NotAcceptable\Exception as NotAcceptableException,
 	Http\Request\RequestInterface,
 	Http\Response\ResponseInterface,

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Negotiator;
+namespace WordPressPluginFramework\Http\Negotiator;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Http\Response\ResponseInterface,
 	Http\Responses\ResponsesInterface,

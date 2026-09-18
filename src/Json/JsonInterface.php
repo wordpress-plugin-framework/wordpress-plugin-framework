@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Json;
+namespace WordPressPluginFramework\Json;
 
 interface JsonInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Collection\Item\Key;
+namespace WordPressPluginFramework\Collection\Item\Key;
 
 interface KeyInterface
 {

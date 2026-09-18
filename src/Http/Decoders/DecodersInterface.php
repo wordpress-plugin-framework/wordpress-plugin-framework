@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders;
+namespace WordPressPluginFramework\Http\Decoders;
 
 use Closure;
 use Countable;
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 use IteratorAggregate;
 
 interface DecodersInterface extends IteratorAggregate, Countable

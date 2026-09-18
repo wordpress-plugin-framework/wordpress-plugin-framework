@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline;
+namespace WordPressPluginFramework\Pipeline;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Request\RequestInterface;
+use WordPressPluginFramework\Http\Request\RequestInterface;
 
 readonly class Pipeline implements PipelineInterface
 {

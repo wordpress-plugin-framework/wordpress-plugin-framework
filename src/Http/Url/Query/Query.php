@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url\Query;
+namespace WordPressPluginFramework\Http\Url\Query;
 
 use ArrayIterator;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
 	Http\Encoders\Query\EncoderInterface,
 };

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Normalizers\DateTime;
+namespace WordPressPluginFramework\Http\Normalizers\DateTime;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Normalizers\NormalizerException,
 	Http\Normalizers\NormalizerInterface,
 };

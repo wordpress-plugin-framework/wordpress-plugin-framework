@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database;
+namespace WordPressPluginFramework\Database;
 
-use Hoo\WordPressPluginFramework\Database\Query\QueryInterface;
+use WordPressPluginFramework\Database\Query\QueryInterface;
 
 interface DatabaseInterface
 {

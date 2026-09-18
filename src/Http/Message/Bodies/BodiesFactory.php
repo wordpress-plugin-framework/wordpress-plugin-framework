@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Bodies;
+namespace WordPressPluginFramework\Http\Message\Bodies;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
 	Http\Encoders\EncodersInterface,
 	Http\Message\Body\Accessor,

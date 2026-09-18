@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Accept;
+namespace WordPressPluginFramework\Http\Message\Headers\Accept;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\MediaRange\MediaRange,
 	Http\Message\Headers\Parameters\ParametersFactoryInterface,
 	Http\Abnf\Rfc9110,

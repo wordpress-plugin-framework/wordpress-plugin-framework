@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Hooks\Deactivation;
+namespace WordPressPluginFramework\Hooks\Deactivation;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Hooks\HookInterface;
+use WordPressPluginFramework\Hooks\HookInterface;
 
 readonly class Hook implements HookInterface
 {

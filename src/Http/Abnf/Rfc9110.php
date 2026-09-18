@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Abnf;
+namespace WordPressPluginFramework\Http\Abnf;
 
 readonly class Rfc9110
 {

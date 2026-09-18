@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Select;
+namespace WordPressPluginFramework\Database\Select;
 
-use Hoo\WordPressPluginFramework\Database\Query\QueryInterface;
+use WordPressPluginFramework\Database\Query\QueryInterface;
 
 interface SelectInterface
 {

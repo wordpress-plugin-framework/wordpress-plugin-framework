@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Float;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Float;
 
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
+use WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
 
 readonly class Rule extends AbstractRule
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Exceptions\Handler\ViewModels;
+namespace WordPressPluginFramework\Exceptions\Handler\ViewModels;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
     Exceptions\Interfaces\HasMessagesInterface,
     View\Model\ModelInterface as ViewModelInterface
 };

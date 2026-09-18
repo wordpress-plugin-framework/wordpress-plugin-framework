@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange\Precedence;
+namespace WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange\Precedence;
 
 enum Precedence: int
 {

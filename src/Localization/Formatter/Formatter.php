@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Localization\Formatter;
+namespace WordPressPluginFramework\Localization\Formatter;
 
 readonly class Formatter implements FormatterInterface
 {

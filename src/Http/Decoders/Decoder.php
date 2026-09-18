@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders;
+namespace WordPressPluginFramework\Http\Decoders;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };

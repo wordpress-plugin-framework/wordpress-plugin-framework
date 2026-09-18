@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Bodies;
+namespace WordPressPluginFramework\Http\Message\Bodies;
 
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 
 interface BodiesFactoryInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url;
+namespace WordPressPluginFramework\Http\Url;
 
-use Hoo\WordPressPluginFramework\Http\Url\Query\QueryFactoryInterface;
+use WordPressPluginFramework\Http\Url\Query\QueryFactoryInterface;
 
 readonly class UrlFactory implements UrlFactoryInterface
 {

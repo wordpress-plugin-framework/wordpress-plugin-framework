@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url\Query;
+namespace WordPressPluginFramework\Http\Url\Query;
 
 interface QueryFactoryInterface
 {

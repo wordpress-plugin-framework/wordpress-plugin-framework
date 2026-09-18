@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Accept;
+namespace WordPressPluginFramework\Http\Message\Headers\Accept;
 
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 use Stringable;
 
 interface AcceptInterface extends Stringable

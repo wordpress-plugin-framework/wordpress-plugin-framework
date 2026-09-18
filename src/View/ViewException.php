@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\View;
+namespace WordPressPluginFramework\View;
 
 use Exception;
 

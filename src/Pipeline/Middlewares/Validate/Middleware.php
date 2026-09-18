@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Collections\Message\Collection as MessageCollection,
 	Pipeline\Middlewares\MiddlewareInterface,

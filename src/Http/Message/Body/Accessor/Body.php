@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Body\Accessor;
+namespace WordPressPluginFramework\Http\Message\Body\Accessor;
 
 use ArrayIterator;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
 	Http\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,

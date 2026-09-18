@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Exceptions;
+namespace WordPressPluginFramework\Http\Exceptions;
 
-use Hoo\WordPressPluginFramework\Exceptions\Interfaces\HasStatusCodeInterface;
+use WordPressPluginFramework\Exceptions\Interfaces\HasStatusCodeInterface;
 
 class Exception extends \Exception implements HasStatusCodeInterface
 {

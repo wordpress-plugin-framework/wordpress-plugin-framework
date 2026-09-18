@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url;
+namespace WordPressPluginFramework\Http\Url;
 
 interface UrlFactoryInterface
 {

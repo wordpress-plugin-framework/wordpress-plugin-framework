@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes;
+namespace WordPressPluginFramework\Routes;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Method\Method;
+use WordPressPluginFramework\Http\Method\Method;
 
 interface RoutesBuilderInterface
 {

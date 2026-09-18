@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers;
+namespace WordPressPluginFramework\Http\Message\Headers;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\AcceptFactoryInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeFactoryInterface,
 };

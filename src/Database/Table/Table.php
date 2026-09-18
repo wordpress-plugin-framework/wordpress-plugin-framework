@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Table;
+namespace WordPressPluginFramework\Database\Table;
 
 readonly class Table implements TableInterface
 {

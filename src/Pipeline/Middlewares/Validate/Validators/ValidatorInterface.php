@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Request\RequestInterface;
+use WordPressPluginFramework\Http\Request\RequestInterface;
 
 interface ValidatorInterface
 {

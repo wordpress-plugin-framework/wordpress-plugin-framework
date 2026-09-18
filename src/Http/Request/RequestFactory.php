@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Request;
+namespace WordPressPluginFramework\Http\Request;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Exceptions\BadRequest\Exception as BadRequestException,
 	Http\Message\Body\BodyFactoryInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,

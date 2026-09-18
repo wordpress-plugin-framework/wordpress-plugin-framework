@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Responses;
+namespace WordPressPluginFramework\Http\Responses;
 
 use ArrayIterator;
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
     Http\Message\Headers\Accept\AcceptInterface,
     Http\Response\ResponseInterface,
 };

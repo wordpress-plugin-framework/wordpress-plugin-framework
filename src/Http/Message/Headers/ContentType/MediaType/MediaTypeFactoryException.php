@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType;
+namespace WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType;
 
 use Exception;
 

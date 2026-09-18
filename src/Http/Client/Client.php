@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Client;
+namespace WordPressPluginFramework\Http\Client;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Http\Request\RequestFactoryInterface,
 	Http\Response\ResponseInterface,

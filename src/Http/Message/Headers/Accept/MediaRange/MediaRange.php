@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange;
+namespace WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\MediaRange\Precedence\Precedence,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,

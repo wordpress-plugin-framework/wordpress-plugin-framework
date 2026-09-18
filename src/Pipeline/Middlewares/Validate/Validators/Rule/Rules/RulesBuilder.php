@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\Array\Rule as ArrayRule,
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\Bool\Rule as BoolRule,
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\Domain\Rule as DomainRule,

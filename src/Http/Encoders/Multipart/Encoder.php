@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders\Multipart;
+namespace WordPressPluginFramework\Http\Encoders\Multipart;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Abnf\Rfc2046,
 	Http\Abnf\Rfc5234,
 	Http\Encoders\EncoderException,

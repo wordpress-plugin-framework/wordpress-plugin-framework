@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Parameters;
+namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
 interface ParametersFactoryInterface
 {

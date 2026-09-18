@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders\Form;
+namespace WordPressPluginFramework\Http\Encoders\Form;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Encoders\EncoderException,
 	Http\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,

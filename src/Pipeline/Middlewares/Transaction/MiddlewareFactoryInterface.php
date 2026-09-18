@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Transaction;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Transaction;
 
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\MiddlewareInterface;
+use WordPressPluginFramework\Pipeline\Middlewares\MiddlewareInterface;
 
 interface MiddlewareFactoryInterface
 {

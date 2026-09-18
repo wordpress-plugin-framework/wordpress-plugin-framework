@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders;
+namespace WordPressPluginFramework\Http\Decoders;
 
 use Exception;
 

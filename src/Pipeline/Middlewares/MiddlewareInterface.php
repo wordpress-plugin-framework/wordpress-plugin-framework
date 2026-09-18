@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares;
+namespace WordPressPluginFramework\Pipeline\Middlewares;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Request\RequestInterface;
+use WordPressPluginFramework\Http\Request\RequestInterface;
 
 interface MiddlewareInterface
 {

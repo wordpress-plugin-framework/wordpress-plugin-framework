@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Emitter;
+namespace WordPressPluginFramework\Emitter;
 
-use Hoo\WordPressPluginFramework\Http\Response\ResponseInterface;
+use WordPressPluginFramework\Http\Response\ResponseInterface;
 
 readonly class Emitter implements EmitterInterface
 {

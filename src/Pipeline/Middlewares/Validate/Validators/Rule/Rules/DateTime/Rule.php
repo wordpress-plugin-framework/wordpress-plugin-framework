@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\DateTime;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\DateTime;
 
 use DateTime;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Localization\Translator\TranslatorInterface,
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule
 };

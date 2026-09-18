@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison\Comparators;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison\Comparators;
 
 interface ComparatorInterface
 {

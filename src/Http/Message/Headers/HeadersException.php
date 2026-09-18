@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers;
+namespace WordPressPluginFramework\Http\Message\Headers;
 
 use Exception;
 

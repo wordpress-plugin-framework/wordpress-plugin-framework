@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders\Query;
+namespace WordPressPluginFramework\Http\Decoders\Query;
 
 readonly class Decoder implements DecoderInterface
 {

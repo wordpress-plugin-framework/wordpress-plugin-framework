@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url\Query;
+namespace WordPressPluginFramework\Http\Url\Query;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
 	Http\Decoders\Query\DecoderInterface,
 	Http\Encoders\Query\EncoderInterface,

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Exceptions\UnprocessableContent;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Exceptions\UnprocessableContent;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Exceptions\Interfaces\HasMessagesInterface,
 	Http\Exceptions\UnprocessableContent\Exception as UnprocessableContentException,
 };

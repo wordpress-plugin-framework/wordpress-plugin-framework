@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Normalizers\BackedEnum;
+namespace WordPressPluginFramework\Http\Normalizers\BackedEnum;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Normalizers\NormalizerException,
 	Http\Normalizers\NormalizerInterface,
 };

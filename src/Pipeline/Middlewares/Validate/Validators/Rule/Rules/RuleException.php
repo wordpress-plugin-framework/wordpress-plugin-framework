@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules;
 
 use Exception;
 

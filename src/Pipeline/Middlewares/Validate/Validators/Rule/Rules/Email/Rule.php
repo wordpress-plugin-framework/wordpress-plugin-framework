@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Email;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\Email;
 
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
+use WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule;
 
 readonly class Rule extends AbstractRule
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers;
+namespace WordPressPluginFramework\Http\Message\Headers;
 
 use Countable;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\AcceptInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };

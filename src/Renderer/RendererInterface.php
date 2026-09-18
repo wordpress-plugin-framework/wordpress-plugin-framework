@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Renderer;
+namespace WordPressPluginFramework\Renderer;
 
-use Hoo\WordPressPluginFramework\View\ViewInterface;
+use WordPressPluginFramework\View\ViewInterface;
 
 interface RendererInterface
 {

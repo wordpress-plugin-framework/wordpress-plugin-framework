@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Renderer\Escaper;
+namespace WordPressPluginFramework\Renderer\Escaper;
 
 interface EscaperInterface
 {

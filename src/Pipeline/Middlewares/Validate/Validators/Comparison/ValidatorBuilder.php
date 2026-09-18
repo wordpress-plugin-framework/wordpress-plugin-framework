@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Pipeline\Middlewares\Validate\KeyValue\Body\KeyValue as Body,
 	Pipeline\Middlewares\Validate\KeyValue\Query\KeyValue as Query,
 	Pipeline\Middlewares\Validate\KeyValue\Header\KeyValue as Header,

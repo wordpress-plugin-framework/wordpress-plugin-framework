@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\View;
+namespace WordPressPluginFramework\View;
 
-use Hoo\WordPressPluginFramework\View\Model\ModelInterface;
+use WordPressPluginFramework\View\Model\ModelInterface;
 
 interface ViewFactoryInterface
 {

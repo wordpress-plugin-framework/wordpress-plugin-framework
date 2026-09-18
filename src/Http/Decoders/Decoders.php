@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Decoders;
+namespace WordPressPluginFramework\Http\Decoders;
 
 use ArrayIterator;
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 use Traversable;
 
 readonly class Decoders implements DecodersInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline;
+namespace WordPressPluginFramework\Pipeline;
 
 use Closure;
 

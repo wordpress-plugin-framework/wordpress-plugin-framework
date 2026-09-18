@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders;
+namespace WordPressPluginFramework\Http\Encoders;
 
 use ArrayIterator;
 use Closure;

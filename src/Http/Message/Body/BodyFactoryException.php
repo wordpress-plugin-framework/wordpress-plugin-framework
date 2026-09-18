@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Body;
+namespace WordPressPluginFramework\Http\Message\Body;
 
 use Exception;
 

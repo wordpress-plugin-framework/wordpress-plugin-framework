@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Cache;
+namespace WordPressPluginFramework\Cache;
 
 use Exception;
 

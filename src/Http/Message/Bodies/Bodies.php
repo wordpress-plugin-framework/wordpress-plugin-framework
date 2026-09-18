@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Bodies;
+namespace WordPressPluginFramework\Http\Message\Bodies;
 
 use ArrayIterator;
 use Closure;
-use Hoo\WordPressPluginFramework\Http\Message\Body\BodyInterface;
+use WordPressPluginFramework\Http\Message\Body\BodyInterface;
 use Traversable;
 
 readonly class Bodies implements BodiesInterface

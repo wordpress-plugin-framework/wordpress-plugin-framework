@@ -5,12 +5,12 @@
 	"license": "GPL-3.0-or-later",
 	"autoload": {
 		"psr-4": {
-			"Hoo\\WordPressPluginFramework\\": "src/"
+			"WordPressPluginFramework\\": "src/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Hoo\\WordPressPluginFramework\\Tests\\": "tests/"
+			"WordPressPluginFramework\\Tests\\": "tests/"
 		}
 	},
 	"scripts": {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\BackedEnum;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules\BackedEnum;
 
 use BackedEnum;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Localization\Translator\TranslatorInterface,
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\AbstractRule,
 	Pipeline\Middlewares\Validate\Validators\Rule\Rules\RuleException,

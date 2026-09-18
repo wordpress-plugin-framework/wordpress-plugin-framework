@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Value;
+namespace WordPressPluginFramework\Value;
 
 readonly class Value
 {

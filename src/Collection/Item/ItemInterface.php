@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Collection\Item;
+namespace WordPressPluginFramework\Collection\Item;
 
 interface ItemInterface
 {

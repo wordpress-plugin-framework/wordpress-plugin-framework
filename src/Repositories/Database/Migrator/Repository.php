@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Repositories\Database\Migrator;
+namespace WordPressPluginFramework\Repositories\Database\Migrator;
 
 class Repository implements RepositoryInterface
 {

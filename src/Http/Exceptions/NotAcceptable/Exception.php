@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Exceptions\NotAcceptable;
+namespace WordPressPluginFramework\Http\Exceptions\NotAcceptable;
 
-use Hoo\WordPressPluginFramework\Http;
+use WordPressPluginFramework\Http;
 
 class Exception extends Http\Exceptions\Exception
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Uuid;
+namespace WordPressPluginFramework\Uuid;
 
-use Hoo\WordPressPluginFramework\Uuid\UuidInterface;
+use WordPressPluginFramework\Uuid\UuidInterface;
 
 interface UuidFactoryInterface
 {

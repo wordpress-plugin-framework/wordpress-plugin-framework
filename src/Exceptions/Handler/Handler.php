@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Exceptions\Handler;
+namespace WordPressPluginFramework\Exceptions\Handler;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Exceptions\Handler\ViewModels\ViewModel,
 	Exceptions\Interfaces\HasStatusCodeInterface,
 	Http\Negotiator\NegotiatorInterface,

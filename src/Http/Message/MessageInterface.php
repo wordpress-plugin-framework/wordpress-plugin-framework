@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message;
+namespace WordPressPluginFramework\Http\Message;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Body\BodyInterface,
 	Http\Message\Headers\HeadersInterface,
 };

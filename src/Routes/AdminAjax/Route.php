@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes\AdminAjax;
+namespace WordPressPluginFramework\Routes\AdminAjax;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Routes\RouteInterface,
 	Routes\RouteException,
 	Emitter\EmitterInterface,

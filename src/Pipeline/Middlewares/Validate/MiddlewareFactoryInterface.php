@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\MiddlewareInterface;
+use WordPressPluginFramework\Pipeline\Middlewares\MiddlewareInterface;
 
 interface MiddlewareFactoryInterface
 {

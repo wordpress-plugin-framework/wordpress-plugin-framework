@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Body\Accessor;
+namespace WordPressPluginFramework\Http\Message\Body\Accessor;
 
 use Countable;
-use Hoo\WordPressPluginFramework\Http;
+use WordPressPluginFramework\Http;
 use IteratorAggregate;
 use stdClass;
 

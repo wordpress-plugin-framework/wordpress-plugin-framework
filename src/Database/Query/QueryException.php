@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Query;
+namespace WordPressPluginFramework\Database\Query;
 
 use Exception;
 

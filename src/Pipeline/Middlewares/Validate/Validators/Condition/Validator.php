@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Condition;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Condition;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Collections\Message\Collection as MessageCollection,
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\Validate\Validators\ValidatorInterface,

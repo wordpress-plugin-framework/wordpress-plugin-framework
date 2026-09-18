@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Request;
+namespace WordPressPluginFramework\Http\Request;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\MessageInterface,
 	Http\Method\Method,
 	Http\Url\UrlInterface,

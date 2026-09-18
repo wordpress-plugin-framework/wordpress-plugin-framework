@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares;
+namespace WordPressPluginFramework\Pipeline\Middlewares;
 
 use Exception;
 

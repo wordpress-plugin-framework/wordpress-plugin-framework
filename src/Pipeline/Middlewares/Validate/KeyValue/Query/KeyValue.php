@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\KeyValue\Query;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\KeyValue\Query;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
 };

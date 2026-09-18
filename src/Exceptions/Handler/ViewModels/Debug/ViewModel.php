@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Exceptions\Handler\ViewModels\Debug;
+namespace WordPressPluginFramework\Exceptions\Handler\ViewModels\Debug;
 
-use Hoo\WordPressPluginFramework\View\Model\ModelInterface as ViewModelInterface;
+use WordPressPluginFramework\View\Model\ModelInterface as ViewModelInterface;
 use Throwable;
 
 readonly class ViewModel implements ViewModelInterface

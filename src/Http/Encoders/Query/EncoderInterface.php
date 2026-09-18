@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders\Query;
+namespace WordPressPluginFramework\Http\Encoders\Query;
 
 interface EncoderInterface
 {

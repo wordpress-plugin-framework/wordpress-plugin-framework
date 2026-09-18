@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares;
+namespace WordPressPluginFramework\Pipeline\Middlewares;
 
 use Closure;
-use Hoo\WordPressPluginFramework\Pipeline\Middlewares\CurrentUserCan\Capability\Capability;
+use WordPressPluginFramework\Pipeline\Middlewares\CurrentUserCan\Capability\Capability;
 
 
 interface MiddlewaresBuilderInterface

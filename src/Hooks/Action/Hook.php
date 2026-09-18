@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Hooks\Action;
+namespace WordPressPluginFramework\Hooks\Action;
 
 use Closure;
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Hooks\HookInterface,
 	Http\Request\RequestInterface,
 	Pipeline\PipelineInterface,

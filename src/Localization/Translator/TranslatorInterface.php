@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Localization\Translator;
+namespace WordPressPluginFramework\Localization\Translator;
 
 interface TranslatorInterface
 {

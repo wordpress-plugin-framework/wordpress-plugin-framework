@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Bodies;
+namespace WordPressPluginFramework\Http\Message\Bodies;
 
 use Closure;
 use Countable;
-use Hoo\WordPressPluginFramework\Http\Message\Body\BodyInterface;
+use WordPressPluginFramework\Http\Message\Body\BodyInterface;
 use IteratorAggregate;
 
 interface BodiesInterface extends IteratorAggregate, Countable

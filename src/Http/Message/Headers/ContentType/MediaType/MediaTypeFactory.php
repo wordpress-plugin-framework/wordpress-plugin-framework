@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType;
+namespace WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType;
 
-use Hoo\WordPressPluginFramework\{
+use WordPressPluginFramework\{
 	Http\Message\Headers\Parameters\ParametersFactoryInterface,
 	Http\Abnf\Rfc9110,
 };

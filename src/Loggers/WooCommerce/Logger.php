@@ -2,7 +2,7 @@
 
 namespace Hoo\WooCommercePluginFramework\Loggers;
 
-use Hoo\WordPressPluginFramework\Logger\LoggerInterface;
+use WordPressPluginFramework\Logger\LoggerInterface;
 use WC_Logger_Interface;
 
 class Logger implements LoggerInterface

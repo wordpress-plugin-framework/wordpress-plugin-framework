@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Encoders;
+namespace WordPressPluginFramework\Http\Encoders;
 
-use Hoo\WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
 
 interface EncoderInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Url\Scheme;
+namespace WordPressPluginFramework\Http\Url\Scheme;
 
 use Exception;
 

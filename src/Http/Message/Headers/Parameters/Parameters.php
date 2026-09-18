@@ -1,9 +1,9 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Http\Message\Headers\Parameters;
+namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
 use ArrayIterator;
-use Hoo\WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\Http\Abnf\Rfc9110;
 use Traversable;
 
 readonly class Parameters implements ParametersInterface

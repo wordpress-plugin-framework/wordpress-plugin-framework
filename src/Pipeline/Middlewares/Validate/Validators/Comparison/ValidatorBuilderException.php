@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
+namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Comparison;
 
 use Exception;
 

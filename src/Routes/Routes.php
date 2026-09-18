@@ -1,6 +1,6 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Routes;
+namespace WordPressPluginFramework\Routes;
 
 readonly class Routes implements RoutesInterface
 {

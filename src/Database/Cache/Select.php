@@ -1,10 +1,10 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Cache;
+namespace WordPressPluginFramework\Database\Cache;
 
-use Hoo\WordPressPluginFramework\Cache\CacheInterface;
-use Hoo\WordPressPluginFramework\Database\Select\SelectInterface;
-use Hoo\WordPressPluginFramework\Database\Query;
+use WordPressPluginFramework\Cache\CacheInterface;
+use WordPressPluginFramework\Database\Select\SelectInterface;
+use WordPressPluginFramework\Database\Query;
 
 readonly class Select implements SelectInterface
 {

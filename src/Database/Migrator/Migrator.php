@@ -1,8 +1,8 @@
 <?php
 
-namespace Hoo\WordPressPluginFramework\Database\Migrator;
+namespace WordPressPluginFramework\Database\Migrator;
 
-use Hoo\WordPressPluginFramework\Repositories\Database\Migrator\RepositoryInterface;
+use WordPressPluginFramework\Repositories\Database\Migrator\RepositoryInterface;
 use wpdb;
 
 readonly class Migrator implements MigratorInterface
