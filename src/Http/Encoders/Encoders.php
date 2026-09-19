@@ -72,13 +72,6 @@ readonly class Encoders implements EncodersInterface
 		return new static($encoders);
 	}
 
-	public function getIterator(): Traversable
-	{
-		return new ArrayIterator(
-			array_values($this->encoders),
-		);
-	}
-
 	public function isEmpty(): bool
 	{
 		return $this->count() === 0;
@@ -89,9 +82,21 @@ readonly class Encoders implements EncodersInterface
 		return !$this->isEmpty();
 	}
 
+	public function getIterator(): Traversable
+	{
+		return new ArrayIterator(
+			array_values($this->encoders),
+		);
+	}
+
 	public function count(): int
 	{
 		return count($this->encoders);
+	}
+
+	public function __invoke(): array
+	{
+		return array_values($this->encoders);
 	}
 
 	protected function validate(array $encoders): void

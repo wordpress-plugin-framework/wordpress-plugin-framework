@@ -2,17 +2,16 @@
 
 namespace WordPressPluginFramework\Http\Decoders;
 
-use Closure;
 use Countable;
 use WordPressPluginFramework\Http\Message\Headers\ContentType\MediaType\MediaTypeInterface;
+use Closure;
 use IteratorAggregate;
 
 interface DecodersInterface extends IteratorAggregate, Countable
 {
-	public function with(DecoderInterface $decoder): static;
+	public function __invoke(): array;
 
-	public function isEmpty(): bool;
-	public function isNotEmpty(): bool;
+	public function with(DecoderInterface $decoder): static;
 
 	public function first(): DecoderInterface;
 	public function last(): DecoderInterface;
@@ -23,4 +22,7 @@ interface DecodersInterface extends IteratorAggregate, Countable
 
 	public function filterByContentType(MediaTypeInterface $contentType): static;
 	public function mapContentType(MediaTypeInterface $contentType): static;
+
+	public function isEmpty(): bool;
+	public function isNotEmpty(): bool;
 }

@@ -42,6 +42,13 @@ readonly class Bodies implements BodiesInterface
 		return new static($bodies);
 	}
 
+	public function map(Closure $closure): static
+	{
+		$bodies = array_map($closure, $this->bodies);
+
+		return new static($bodies);
+	}
+
 	public function sort(Closure $closure): static
 	{
 		$bodies = $this->bodies;
@@ -50,6 +57,15 @@ readonly class Bodies implements BodiesInterface
 		return new static($bodies);
 	}
 
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
+	}
+
+	public function isNotEmpty(): bool
+	{
+		return !$this->isEmpty();
+	}
 
 	public function getIterator(): Traversable
 	{
@@ -63,14 +79,9 @@ readonly class Bodies implements BodiesInterface
 		return count($this->bodies);
 	}
 
-	public function isEmpty(): bool
+	public function __invoke(): array
 	{
-		return $this->count() === 0;
-	}
-
-	public function isNotEmpty(): bool
-	{
-		return !$this->isEmpty();
+		return array_values($this->bodies);
 	}
 
 	protected function validate(array $bodies): void

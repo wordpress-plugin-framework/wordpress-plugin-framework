@@ -10,17 +10,14 @@ use WordPressPluginFramework\{
 
 readonly class UrlBuilder implements UrlBuilderInterface
 {
-	protected ?QueryInterface $query;
-
 	public function __construct(
 		protected QueryFactoryInterface $queryFactory,
 		protected ?Scheme $scheme = null,
 		protected string $host = '',
 		protected ?int $port = null,
 		protected string $path = '',
-		?QueryInterface $query = null,
+		protected ?QueryInterface $query = null,
 	) {
-		$this->query = $query ?? $this->queryFactory->create([]);
 	}
 
 	public function scheme(Scheme|string $scheme): static

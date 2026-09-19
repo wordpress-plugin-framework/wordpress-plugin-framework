@@ -25,11 +25,6 @@ readonly class Body implements BodyInterface
 		return $this->encoder->contentType();
 	}
 
-	public function __invoke(): array|stdClass
-	{
-		return $this->body;
-	}
-
 	public function values(string $key): array
 	{
 		return $this->accessor->values($this->body, $key);
@@ -42,6 +37,10 @@ readonly class Body implements BodyInterface
 
 	public function get(string $key): string|int|float|bool|null|array|stdClass
 	{
+		if (!$this->accessor->has($this->body, $key)) {
+			return null;
+		}
+
 		return $this->accessor->get($this->body, $key);
 	}
 
@@ -77,6 +76,11 @@ readonly class Body implements BodyInterface
 	public function count(): int
 	{
 		return count((array) $this->body);
+	}
+
+	public function __invoke(): array|stdClass
+	{
+		return $this->body;
 	}
 
 	public function __toString(): string

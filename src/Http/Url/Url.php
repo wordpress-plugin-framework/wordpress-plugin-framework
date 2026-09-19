@@ -19,7 +19,7 @@ readonly class Url implements UrlInterface
 		string $host,
 		?int $port,
 		string $path,
-		protected QueryInterface $query,
+		protected ?QueryInterface $query = null,
 	) {
 		$this->validateHost($host);
 		$this->host = $this->normalizeHost($host);
@@ -76,7 +76,7 @@ readonly class Url implements UrlInterface
 		return new static($this->scheme, $this->host, $this->port, $path, $this->query);
 	}
 
-	public function query(): QueryInterface
+	public function query(): ?QueryInterface
 	{
 		return $this->query;
 	}
@@ -94,6 +94,11 @@ readonly class Url implements UrlInterface
 		return new static($this->scheme, $this->host, $this->port, $this->path, $query);
 	}
 
+	public function withoutQuery(): static
+	{
+		return new static($this->scheme, $this->host, $this->port, $this->path, null);
+	}
+
 	public function __toString(): string
 	{
 		$url = "{$this->scheme->value}://{$this->host}";
@@ -102,7 +107,11 @@ readonly class Url implements UrlInterface
 			$url .= ":{$this->port}";
 		}
 
-		$url .= "{$this->path}{$this->query}";
+		$url .= $this->path;
+
+		if ($this->query !== null) {
+			$url .= "?{$this->query}";
+		}
 
 		return $url;
 	}

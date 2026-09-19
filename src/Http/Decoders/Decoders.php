@@ -75,13 +75,6 @@ readonly class Decoders implements DecodersInterface
 		return $this->map(fn($decoder) => $decoder->withContentType($contentType));
 	}
 
-	public function getIterator(): Traversable
-	{
-		return new ArrayIterator(
-			array_values($this->decoders),
-		);
-	}
-
 	public function isEmpty(): bool
 	{
 		return $this->count() === 0;
@@ -92,9 +85,21 @@ readonly class Decoders implements DecodersInterface
 		return !$this->isEmpty();
 	}
 
+	public function getIterator(): Traversable
+	{
+		return new ArrayIterator(
+			array_values($this->decoders),
+		);
+	}
+
 	public function count(): int
 	{
 		return count($this->decoders);
+	}
+
+	public function __invoke(): array
+	{
+		return array_values($this->decoders);
 	}
 
 	protected function validate(array $decoders): void

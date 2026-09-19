@@ -19,7 +19,7 @@ readonly class UrlFactory implements UrlFactoryInterface
 		}
 
 		$scheme = Scheme\Scheme::create($url['scheme'] ?? '');
-		$query = $this->queryFactory->createFromEncoded($url['query'] ?? '');
+		$query = array_key_exists('query', $url) ? $this->queryFactory->createFromEncoded($url['query']) : null;
 
 		return new Url($scheme, $url['host'] ?? '', $url['port'] ?? null, $url['path'] ?? '', $query);
 	}

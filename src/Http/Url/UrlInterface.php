@@ -24,6 +24,7 @@ interface UrlInterface extends Stringable
 	public function path(): string;
 	public function withPath(string $path): static;
 
-	public function query(): QueryInterface;
+	public function query(): ?QueryInterface;
 	public function withQuery(QueryInterface|Closure $query): static;
+	public function withoutQuery(): static;
 }

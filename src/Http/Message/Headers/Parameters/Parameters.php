@@ -43,6 +43,16 @@ readonly class Parameters implements ParametersInterface
 		return new static($parameters);
 	}
 
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
+	}
+
+	public function isNotEmpty(): bool
+	{
+		return !$this->isEmpty();
+	}
+
 	public function getIterator(): Traversable
 	{
 		return new ArrayIterator($this->parameters);

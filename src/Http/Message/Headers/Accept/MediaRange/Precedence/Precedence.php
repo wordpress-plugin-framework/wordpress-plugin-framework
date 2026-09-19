@@ -4,7 +4,7 @@ namespace WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange\Preced
 
 enum Precedence: int
 {
-    case TypeSubtype = 2;
-    case TypeWildcardSubtype = 3;
-    case WildcardTypeWildcardSubtype = 4;
+	case TypeSubtype = 2;
+	case TypeWildcardSubtype = 3;
+	case WildcardTypeWildcardSubtype = 4;
 }

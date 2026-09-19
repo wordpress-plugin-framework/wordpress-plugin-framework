@@ -2,21 +2,18 @@
 
 namespace WordPressPluginFramework\Http\Message\Headers\Accept;
 
+use ArrayIterator;
 use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\MediaRange\Precedence\Precedence,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };
+use Traversable;
 
 readonly class Accept implements AcceptInterface
 {
 	public function __construct(
 		protected array $mediaRanges,
 	) {
-	}
-
-	public function mediaRanges(): array
-	{
-		return $this->mediaRanges;
 	}
 
 	public function q(MediaTypeInterface $mediaType): float
@@ -30,6 +27,33 @@ readonly class Accept implements AcceptInterface
 		}
 
 		return 0;
+	}
+
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
+	}
+
+	public function isNotEmpty(): bool
+	{
+		return !$this->isEmpty();
+	}
+
+	public function getIterator(): Traversable
+	{
+		return new ArrayIterator(
+			array_values($this->mediaRanges),
+		);
+	}
+
+	public function count(): int
+	{
+		return count($this->mediaRanges);
+	}
+
+	public function __invoke(): array
+	{
+		return $this->mediaRanges;
 	}
 
 	public function __toString(): string

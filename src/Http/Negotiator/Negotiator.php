@@ -4,6 +4,8 @@ namespace WordPressPluginFramework\Http\Negotiator;
 
 use WordPressPluginFramework\{
 	Http\Exceptions\NotAcceptable\Exception as NotAcceptableException,
+	Http\Message\Headers\Vary\Vary,
+	Http\Message\Headers\Vary\VaryInterface,
 	Http\Request\RequestInterface,
 	Http\Response\ResponseInterface,
 	Http\Responses\ResponsesInterface,
@@ -18,9 +20,9 @@ readonly class Negotiator implements NegotiatorInterface
 			throw new NotAcceptableException('no acceptable representation', 'content_negotiator_error');
 		}
 
-		return $negotiatedResponses
-			->first()
-			->withHeaders(fn($headers) => $headers->with('vary', 'accept'));
+		$response = $negotiatedResponses->first();
+
+		return $this->withVary($response);
 	}
 
 	public function tryNegotiate(RequestInterface $request, ResponsesInterface $responses): ResponseInterface
@@ -28,9 +30,9 @@ readonly class Negotiator implements NegotiatorInterface
 		$negotiatedResponses = $this->negotiateResponses($request, $responses);
 
 		$negotiatedResponses = $negotiatedResponses->count() === 0 ? $responses : $negotiatedResponses;
-		return $negotiatedResponses
-			->first()
-			->withHeaders(fn($headers) => $headers->with('vary', 'accept'));
+		$response = $negotiatedResponses->first();
+
+		return $this->withVary($response);
 	}
 
 	protected function negotiateResponses(RequestInterface $request, ResponsesInterface $responses): ResponsesInterface
@@ -47,5 +49,12 @@ readonly class Negotiator implements NegotiatorInterface
 		return $responses
 			->filterByAccept($accept)
 			->sortByAccept($accept);
+	}
+
+	protected function withVary(ResponseInterface $response): ResponseInterface
+	{
+		return $response->withHeaders(fn($headers) => $headers->withVary(
+			fn(?VaryInterface $vary) => ($vary ?? new Vary([]))->with('accept'),
+		));
 	}
 }

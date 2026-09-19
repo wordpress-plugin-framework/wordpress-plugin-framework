@@ -7,7 +7,9 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc9110,
 	Http\Message\Headers\Accept\AcceptInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
+	Http\Message\Headers\Vary\VaryInterface,
 };
+use Closure;
 use Traversable;
 
 readonly class Headers implements HeadersInterface
@@ -18,6 +20,7 @@ readonly class Headers implements HeadersInterface
 		array $headers = [],
 		protected ?AcceptInterface $accept = null,
 		protected ?MediaTypeInterface $contentType = null,
+		protected ?VaryInterface $vary = null,
 	) {
 		$this->validate($headers);
 		$this->headers = $this->normalize($headers);
@@ -45,10 +48,14 @@ readonly class Headers implements HeadersInterface
 			throw new HeadersException('content-type must be set through withContentType');
 		}
 
+		if ($name === 'vary') {
+			throw new HeadersException('vary must be set through withVary');
+		}
+
 		$headers = $this->headers;
 		$headers[$name] = $value;
 
-		return new static($headers, $this->accept, $this->contentType);
+		return new static($headers, $this->accept, $this->contentType, $this->vary);
 	}
 
 	public function without(string $name): static
@@ -63,10 +70,14 @@ readonly class Headers implements HeadersInterface
 			throw new HeadersException('content-type must be removed through withoutContentType');
 		}
 
+		if ($name === 'vary') {
+			throw new HeadersException('vary must be removed through withoutVary');
+		}
+
 		$headers = $this->headers;
 		unset($headers[$name]);
 
-		return new static($headers, $this->accept, $this->contentType);
+		return new static($headers, $this->accept, $this->contentType, $this->vary);
 	}
 
 	public function accept(): ?AcceptInterface
@@ -74,12 +85,20 @@ readonly class Headers implements HeadersInterface
 		return $this->accept;
 	}
 
-	public function withAccept(AcceptInterface $accept): static
+	public function withAccept(AcceptInterface|Closure $accept): static
 	{
+		if ($accept instanceof Closure) {
+			$accept = $accept($this->accept);
+		}
+
+		if (!$accept instanceof AcceptInterface) {
+			throw new HeadersException('must provide accept interface');
+		}
+
 		$headers = $this->headers;
 		$headers['accept'] = (string) $accept;
 
-		return new static($headers, $accept, $this->contentType);
+		return new static($headers, $accept, $this->contentType, $this->vary);
 	}
 
 	public function withoutAccept(): static
@@ -87,7 +106,7 @@ readonly class Headers implements HeadersInterface
 		$headers = $this->headers;
 		unset($headers['accept']);
 
-		return new static($headers, null, $this->contentType);
+		return new static($headers, null, $this->contentType, $this->vary);
 	}
 
 	public function contentType(): ?MediaTypeInterface
@@ -95,12 +114,20 @@ readonly class Headers implements HeadersInterface
 		return $this->contentType;
 	}
 
-	public function withContentType(MediaTypeInterface $contentType): static
+	public function withContentType(MediaTypeInterface|Closure $contentType): static
 	{
+		if ($contentType instanceof Closure) {
+			$contentType = $contentType($this->contentType);
+		}
+
+		if (!$contentType instanceof MediaTypeInterface) {
+			throw new HeadersException('must provide media type interface');
+		}
+
 		$headers = $this->headers;
 		$headers['content-type'] = (string) $contentType;
 
-		return new static($headers, $this->accept, $contentType);
+		return new static($headers, $this->accept, $contentType, $this->vary);
 	}
 
 	public function withoutContentType(): static
@@ -108,12 +135,46 @@ readonly class Headers implements HeadersInterface
 		$headers = $this->headers;
 		unset($headers['content-type']);
 
-		return new static($headers, $this->accept, null);
+		return new static($headers, $this->accept, null, $this->vary);
 	}
 
-	public function __invoke(): array
+	public function vary(): ?VaryInterface
 	{
-		return $this->headers;
+		return $this->vary;
+	}
+
+	public function withVary(VaryInterface|Closure $vary): static
+	{
+		if ($vary instanceof Closure) {
+			$vary = $vary($this->vary);
+		}
+
+		if (!$vary instanceof VaryInterface) {
+			throw new HeadersException('must provide vary interface');
+		}
+
+		$headers = $this->headers;
+		$headers['vary'] = (string) $vary;
+
+		return new static($headers, $this->accept, $this->contentType, $vary);
+	}
+
+	public function withoutVary(): static
+	{
+		$headers = $this->headers;
+		unset($headers['vary']);
+
+		return new static($headers, $this->accept, $this->contentType, null);
+	}
+
+	public function isEmpty(): bool
+	{
+		return $this->count() === 0;
+	}
+
+	public function isNotEmpty(): bool
+	{
+		return !$this->isEmpty();
 	}
 
 	public function getIterator(): Traversable
@@ -124,6 +185,11 @@ readonly class Headers implements HeadersInterface
 	public function count(): int
 	{
 		return count($this->headers);
+	}
+
+	public function __invoke(): array
+	{
+		return $this->headers;
 	}
 
 	protected function validate(array $headers): void

@@ -31,6 +31,10 @@ readonly class Query implements QueryInterface
 
 	public function get(string $key): string|int|float|bool|null|array|stdClass
 	{
+		if (!$this->accessor->has($this->query, $key)) {
+			return null;
+		}
+
 		return $this->accessor->get($this->query, $key);
 	}
 
@@ -79,6 +83,6 @@ readonly class Query implements QueryInterface
 			return '';
 		}
 
-		return "?{$this->encoder->encode($this->query)}";
+		return $this->encoder->encode($this->query);
 	}
 }
