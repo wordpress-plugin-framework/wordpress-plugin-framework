@@ -22,29 +22,12 @@ readonly class RoutesBuilder implements RoutesBuilderInterface
 	) {
 	}
 
-	public function routes(): array
-	{
-		return $this->routes;
-	}
-
-	public function withRoutes(RouteInterface ...$routes): static
-	{
-		return new static($this->responseFactory, $this->pipelineFactory, $this->handler, $this->middlewaresFactory, $routes);
-	}
-
-	public function withoutRoutes(): static
-	{
-		return new static($this->responseFactory, $this->pipelineFactory, $this->handler, $this->middlewaresFactory, []);
-	}
-
 	public function withRoute(RouteInterface $route): static
 	{
-		return $this->withRoutes(
-			...[
-				...$this->routes,
-				$route,
-			],
-		);
+		$routes = $this->routes;
+		$routes[] = $route;
+
+		return new static($this->responseFactory, $this->pipelineFactory, $this->handler, $this->middlewaresFactory, $routes);
 	}
 
 	public function adminAjax(string $action, Closure $closure, ?Closure $middlewaresClosure = null): static
@@ -74,9 +57,9 @@ readonly class RoutesBuilder implements RoutesBuilderInterface
 		);
 	}
 
-	public function build(): array
+	public function build(): RoutesInterface
 	{
-		return $this->routes;
+		return new Routes($this->routes);
 	}
 
 	protected function pipelineFactory(?Closure $closure): PipelineFactoryInterface

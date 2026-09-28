@@ -19,61 +19,40 @@ readonly class HooksBuilder implements HooksBuilderInterface
 	) {
 	}
 
-	public function hooks(): array
-	{
-		return $this->hooks;
-	}
-
-	public function withHooks(HookInterface ...$hooks): static
-	{
-		return new static($this->request, $this->renderer, $this->pipelineFactory, $hooks);
-	}
-
-	public function withoutHooks(): static
-	{
-		return new static($this->request, $this->renderer, $this->pipelineFactory, []);
-	}
-
 	public function withHook(HookInterface $hook): static
 	{
-		return $this->withHooks(
-			...[
-				...$this->hooks,
-				$hook,
-			],
-		);
+		$hooks = $this->hooks;
+		$hooks[] = $hook;
+
+		return new static($this->request, $this->renderer, $this->pipelineFactory, $hooks);
 	}
 
 	public function action(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static
 	{
-		return $this->withHook(
-			new Action\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure),
-		);
+		$hook = new Action\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure);
+		return $this->withHook($hook);
 	}
 
 	public function filter(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static
 	{
-		return $this->withHook(
-			new Filter\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure),
-		);
+		$hook = new Filter\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure);
+		return $this->withHook($hook);
 	}
 
 	public function activation(string $file, Closure $closure): static
 	{
-		return $this->withHook(
-			new Activation\Hook($file, $closure),
-		);
+		$hook = new Activation\Hook($file, $closure);
+		return $this->withHook($hook);
 	}
 
 	public function deactivation(string $file, Closure $closure): static
 	{
-		return $this->withHook(
-			new Deactivation\Hook($file, $closure),
-		);
+		$hook = new Deactivation\Hook($file, $closure);
+		return $this->withHook($hook);
 	}
 
-	public function build(): array
+	public function build(): HooksInterface
 	{
-		return $this->hooks;
+		return new Hooks($this->hooks);
 	}
 }
