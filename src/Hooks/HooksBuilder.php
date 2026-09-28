@@ -5,7 +5,7 @@ namespace WordPressPluginFramework\Hooks;
 use Closure;
 use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
-	Pipeline\PipelineFactoryInterface,
+	Pipeline\PipelineBuilderInterface,
 	Renderer\RendererInterface,
 };
 
@@ -14,7 +14,7 @@ readonly class HooksBuilder implements HooksBuilderInterface
 	public function __construct(
 		protected RequestInterface $request,
 		protected RendererInterface $renderer,
-		protected PipelineFactoryInterface $pipelineFactory,
+		protected PipelineBuilderInterface $pipelineBuilder,
 		protected array $hooks = [],
 	) {
 	}
@@ -24,18 +24,18 @@ readonly class HooksBuilder implements HooksBuilderInterface
 		$hooks = $this->hooks;
 		$hooks[] = $hook;
 
-		return new static($this->request, $this->renderer, $this->pipelineFactory, $hooks);
+		return new static($this->request, $this->renderer, $this->pipelineBuilder, $hooks);
 	}
 
-	public function action(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static
+	public function action(string $name, Closure $closure, int $priority = 10, ?Closure $pipelineBuilderClosure = null): static
 	{
-		$hook = new Action\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure);
+		$hook = new Action\Hook($this->request, $this->renderer, $this->pipelineBuilder, $name, $closure, $priority, $pipelineBuilderClosure);
 		return $this->withHook($hook);
 	}
 
-	public function filter(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static
+	public function filter(string $name, Closure $closure, int $priority = 10, ?Closure $pipelineBuilderClosure = null): static
 	{
-		$hook = new Filter\Hook($this->request, $this->renderer, $this->pipelineFactory, $name, $closure, $priority, $middlewaresBuilderClosure);
+		$hook = new Filter\Hook($this->request, $this->renderer, $this->pipelineBuilder, $name, $closure, $priority, $pipelineBuilderClosure);
 		return $this->withHook($hook);
 	}
 

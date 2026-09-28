@@ -1,9 +1,11 @@
 <?php
 
-namespace WordPressPluginFramework\Pipeline\Middlewares;
+namespace WordPressPluginFramework\Pipeline;
 
 use Closure;
 use WordPressPluginFramework\{
+	Http\Request\RequestInterface,
+	Pipeline\Middlewares\MiddlewareInterface,
 	Pipeline\Middlewares\CurrentUserCan\Middleware as CurrentUserCanMiddleware,
 	Pipeline\Middlewares\CurrentUserCan\Capability\Capability,
 	Pipeline\Middlewares\LogExecutionTime\MiddlewareFactoryInterface as LogExecutionTimeMiddlewareFactoryInterface,
@@ -12,79 +14,57 @@ use WordPressPluginFramework\{
 	Pipeline\Middlewares\VerifyNonce\Middleware as VerifyNonceMiddleware,
 };
 
-readonly class MiddlewaresBuilder implements MiddlewaresBuilderInterface
+readonly class PipelineBuilder implements PipelineBuilderInterface
 {
 	public function __construct(
 		protected LogExecutionTimeMiddlewareFactoryInterface $logExecutionTimeMiddlewareFactory,
 		protected TransactionMiddlewareFactoryInterface $transactionMiddlewareFactory,
 		protected ValidateMiddlewareFactoryInterface $validateMiddlewareFactory,
+		protected RequestInterface $request,
 		protected array $middlewares = [],
 	) {
 	}
 
-	public function middlewares(): array
-	{
-		return $this->middlewares;
-	}
-
-	public function withMiddlewares(MiddlewareInterface ...$middlewares): static
-	{
-		return new static($this->logExecutionTimeMiddlewareFactory, $this->transactionMiddlewareFactory, $this->validateMiddlewareFactory, $middlewares);
-	}
-
-	public function withoutMiddlewares(): static
-	{
-		return new static($this->logExecutionTimeMiddlewareFactory, $this->transactionMiddlewareFactory, $this->validateMiddlewareFactory, []);
-	}
-
 	public function withMiddleware(MiddlewareInterface $middleware): static
 	{
-		return $this->withMiddlewares(
-			...[
-				...$this->middlewares,
-				$middleware,
-			],
-		);
+		$middlewares = $this->middlewares;
+		$middlewares[] = $middleware;
+
+		return new static($this->logExecutionTimeMiddlewareFactory, $this->transactionMiddlewareFactory, $this->validateMiddlewareFactory, $middlewares);
 	}
 
 	public function currentUserCan(Capability $capability): static
 	{
-		return $this->withMiddleware(
-			new CurrentUserCanMiddleware($capability),
-		);
+		$middleware = new CurrentUserCanMiddleware($capability);
+		return $this->withMiddleware($middleware);
 	}
 
 	public function logExecutionTime(): static
 	{
-
-		return $this->withMiddleware(
-			$this->logExecutionTimeMiddlewareFactory->create(),
-		);
+		$middleware = $this->logExecutionTimeMiddlewareFactory->create();
+		return $this->withMiddleware($middleware);
 	}
 
 	public function transaction(): static
 	{
-		return $this->withMiddleware(
-			$this->transactionMiddlewareFactory->create(),
-		);
+		$middleware = $this->transactionMiddlewareFactory->create();
+		return $this->withMiddleware($middleware);
 	}
 
 	public function verifyNonce(string $name, string|int $action = -1): static
 	{
-		return $this->withMiddleware(
-			new VerifyNonceMiddleware($name, $action),
-		);
+		$middleware = new VerifyNonceMiddleware($name, $action);
+		return $this->withMiddleware($middleware);
 	}
 
 	public function validate(Closure $closure): static
 	{
-		return $this->withMiddleware(
-			$this->validateMiddlewareFactory->create($closure),
-		);
+		$middleware = $this->validateMiddlewareFactory->create($closure);
+		return $this->withMiddleware($middleware);
 	}
 
-	public function build(): array
+	public function build(): PipelineInterface
 	{
-		return $this->middlewares;
+		return new Pipeline($this->request, $this->middlewares);
 	}
 }

@@ -5,9 +5,10 @@ namespace WordPressPluginFramework\Hooks\Filter;
 use Closure;
 use WordPressPluginFramework\{
 	Hooks\HookInterface,
+	Hooks\HookException,
 	Http\Request\RequestInterface,
 	Pipeline\PipelineInterface,
-	Pipeline\PipelineFactoryInterface,
+	Pipeline\PipelineBuilderInterface,
 	Renderer\RendererInterface,
 	View\ViewInterface,
 };
@@ -19,11 +20,11 @@ readonly class Hook implements HookInterface
 	public function __construct(
 		protected RequestInterface $request,
 		protected RendererInterface $renderer,
-		protected PipelineFactoryInterface $pipelineFactory,
+		protected PipelineBuilderInterface $pipelineBuilder,
 		protected string $name,
 		protected Closure $closure,
 		protected int $priority = 10,
-		protected ?Closure $middlewaresBuilderClosure = null,
+		protected ?Closure $pipelineBuilderClosure = null,
 	) {
 	}
 
@@ -39,7 +40,9 @@ readonly class Hook implements HookInterface
 
 	protected function callback(...$args): mixed
 	{
-		$view = $this->pipeline()(fn($request) => ($this->closure)($request, ...$args));
+		$pipeline = $this->pipeline ??= $this->buildPipeline();
+
+		$view = $pipeline(fn($request) => ($this->closure)($request, ...$args));
 		if ($view instanceof ViewInterface) {
 			return $this->renderer->render($view);
 		}
@@ -47,8 +50,13 @@ readonly class Hook implements HookInterface
 		return $view;
 	}
 
-	protected function pipeline(): PipelineInterface
+	protected function buildPipeline(): PipelineInterface
 	{
-		return $this->pipeline ??= $this->pipelineFactory->create($this->request, $this->middlewaresBuilderClosure);
+		$pipelineBuilder = ($this->pipelineBuilderClosure)($this->pipelineBuilder);
+		if (!$pipelineBuilder instanceof PipelineBuilderInterface) {
+			throw new HookException('Pipeline Builder closure must return the Pipeline Builder');
+		}
+
+		return $pipelineBuilder->build();
 	}
 }
