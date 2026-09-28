@@ -5,7 +5,6 @@ namespace WordPressPluginFramework\Hooks\Action;
 use Closure;
 use WordPressPluginFramework\{
 	Hooks\HookInterface,
-	Hooks\HookException,
 	Http\Request\RequestInterface,
 	Pipeline\PipelineInterface,
 	Pipeline\PipelineBuilderInterface,
@@ -40,7 +39,7 @@ readonly class Hook implements HookInterface
 
 	protected function callback(...$args): void
 	{
-		$pipeline = $this->pipeline ??= $this->buildPipeline();
+		$pipeline = $this->pipeline ??= $this->pipelineBuilder()->build();
 
 		$view = $pipeline(fn($request) => ($this->closure)($request, ...$args));
 		if ($view instanceof ViewInterface) {
@@ -48,13 +47,8 @@ readonly class Hook implements HookInterface
 		}
 	}
 
-	protected function buildPipeline(): PipelineInterface
+	protected function pipelineBuilder(): PipelineBuilderInterface
 	{
-		$pipelineBuilder = ($this->pipelineBuilderClosure)($this->pipelineBuilder);
-		if (!$pipelineBuilder instanceof PipelineBuilderInterface) {
-			throw new HookException('Pipeline Builder closure must return the Pipeline Builder');
-		}
-
-		return $pipelineBuilder->build();
+		return $this->pipelineBuilderClosure === null ? $this->pipelineBuilder : ($this->pipelineBuilderClosure)($this->pipelineBuilder);
 	}
 }
