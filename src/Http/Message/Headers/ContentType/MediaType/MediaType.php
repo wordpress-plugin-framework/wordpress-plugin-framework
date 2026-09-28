@@ -7,7 +7,6 @@ use WordPressPluginFramework\{
 	Http\Message\Headers\Parameters\Parameters,
 	Http\Message\Headers\Parameters\ParametersInterface,
 };
-use Closure;
 
 readonly class MediaType implements MediaTypeInterface
 {
@@ -51,16 +50,8 @@ readonly class MediaType implements MediaTypeInterface
 		return $this->parameters;
 	}
 
-	public function withParameters(ParametersInterface|Closure $parameters): static
+	public function withParameters(ParametersInterface $parameters): static
 	{
-		if ($parameters instanceof Closure) {
-			$parameters = $parameters($this->parameters);
-		}
-
-		if (!$parameters instanceof ParametersInterface) {
-			throw new MediaTypeException('must provide parameters interface');
-		}
-
 		return new static($this->type, $this->subtype, $parameters);
 	}
 

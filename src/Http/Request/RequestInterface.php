@@ -8,7 +8,6 @@ use WordPressPluginFramework\{
 	Http\Url\UrlInterface,
 	Uuid\UuidInterface,
 };
-use Closure;
 
 interface RequestInterface extends MessageInterface
 {
@@ -18,5 +17,5 @@ interface RequestInterface extends MessageInterface
 	public function withMethod(Method $method): static;
 
 	public function url(): UrlInterface;
-	public function withUrl(UrlInterface|Closure $url): static;
+	public function withUrl(UrlInterface $url): static;
 }

@@ -23,7 +23,7 @@ readonly class Encoder implements EncoderInterface
 			throw new EncoderException('does not encode this media type');
 		}
 
-		$this->contentType = $contentType->parameters()->has('boundary') ? $contentType : $contentType->withParameters(fn($parameters) => $parameters->with('boundary', bin2hex(random_bytes(16))));
+		$this->contentType = $contentType->parameters()->has('boundary') ? $contentType : $contentType->withParameters($contentType->parameters()->with('boundary', bin2hex(random_bytes(16))));
 	}
 
 	public function contentType(): MediaTypeInterface

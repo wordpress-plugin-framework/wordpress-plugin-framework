@@ -9,7 +9,6 @@ use WordPressPluginFramework\{
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Http\Message\Headers\Vary\VaryInterface,
 };
-use Closure;
 use Traversable;
 
 readonly class Headers implements HeadersInterface
@@ -85,16 +84,8 @@ readonly class Headers implements HeadersInterface
 		return $this->accept;
 	}
 
-	public function withAccept(AcceptInterface|Closure $accept): static
+	public function withAccept(AcceptInterface $accept): static
 	{
-		if ($accept instanceof Closure) {
-			$accept = $accept($this->accept);
-		}
-
-		if (!$accept instanceof AcceptInterface) {
-			throw new HeadersException('must provide accept interface');
-		}
-
 		$headers = $this->headers;
 		$headers['accept'] = (string) $accept;
 
@@ -114,16 +105,8 @@ readonly class Headers implements HeadersInterface
 		return $this->contentType;
 	}
 
-	public function withContentType(MediaTypeInterface|Closure $contentType): static
+	public function withContentType(MediaTypeInterface $contentType): static
 	{
-		if ($contentType instanceof Closure) {
-			$contentType = $contentType($this->contentType);
-		}
-
-		if (!$contentType instanceof MediaTypeInterface) {
-			throw new HeadersException('must provide media type interface');
-		}
-
 		$headers = $this->headers;
 		$headers['content-type'] = (string) $contentType;
 
@@ -143,16 +126,8 @@ readonly class Headers implements HeadersInterface
 		return $this->vary;
 	}
 
-	public function withVary(VaryInterface|Closure $vary): static
+	public function withVary(VaryInterface $vary): static
 	{
-		if ($vary instanceof Closure) {
-			$vary = $vary($this->vary);
-		}
-
-		if (!$vary instanceof VaryInterface) {
-			throw new HeadersException('must provide vary interface');
-		}
-
 		$headers = $this->headers;
 		$headers['vary'] = (string) $vary;
 

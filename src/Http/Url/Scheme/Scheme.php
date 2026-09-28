@@ -9,12 +9,14 @@ enum Scheme: string
 
 	public static function create(string $scheme): static
 	{
-		$scheme = static::tryFrom($scheme);
-		if ($scheme === null) {
+		$normalized = strtolower($scheme);
+
+		$case = static::tryFrom($normalized);
+		if ($case === null) {
 			throw new SchemeException("invalid scheme");
 		}
 
-		return $scheme;
+		return $case;
 	}
 
 	public function port(): int

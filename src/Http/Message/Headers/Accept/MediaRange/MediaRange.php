@@ -4,13 +4,11 @@ namespace WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange;
 
 use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\MediaRange\Precedence\Precedence,
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Http\Message\Headers\Parameters\Parameters,
 	Http\Message\Headers\Parameters\ParametersInterface,
 	Http\Abnf\Rfc9110,
 };
-use Closure;
 
 readonly class MediaRange implements MediaRangeInterface
 {
@@ -57,16 +55,8 @@ readonly class MediaRange implements MediaRangeInterface
 		return $this->parameters;
 	}
 
-	public function withParameters(ParametersInterface|Closure $parameters): static
+	public function withParameters(ParametersInterface $parameters): static
 	{
-		if ($parameters instanceof Closure) {
-			$parameters = $parameters($this->parameters);
-		}
-
-		if (!$parameters instanceof ParametersInterface) {
-			throw new MediaRangeException('must provide parameters interface');
-		}
-
 		return new static($this->type, $this->subtype, $parameters, $this->q);
 	}
 
@@ -83,18 +73,6 @@ readonly class MediaRange implements MediaRangeInterface
 	public function withoutQ(): static
 	{
 		return new static($this->type, $this->subtype, $this->parameters, null);
-	}
-
-	public function mediaType(): ?MediaTypeInterface
-	{
-		if (
-			$this->type === '*' ||
-			$this->subtype === '*'
-		) {
-			return null;
-		}
-
-		return new MediaType($this->type, $this->subtype, $this->parameters);
 	}
 
 	public function __tostring(): string

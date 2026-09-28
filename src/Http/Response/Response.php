@@ -7,7 +7,6 @@ use WordPressPluginFramework\{
 	Http\Message\Headers\HeadersInterface,
 	Uuid\UuidInterface,
 };
-use Closure;
 
 readonly class Response implements ResponseInterface
 {
@@ -44,16 +43,8 @@ readonly class Response implements ResponseInterface
 		return $this->headers;
 	}
 
-	public function withHeaders(HeadersInterface|Closure $headers): static
+	public function withHeaders(HeadersInterface $headers): static
 	{
-		if ($headers instanceof Closure) {
-			$headers = $headers($this->headers);
-		}
-
-		if (!$headers instanceof HeadersInterface) {
-			throw new ResponseException('must provide header interface');
-		}
-
 		return new static($this->uuid, $this->statusCode, $headers, $this->body);
 	}
 
@@ -62,16 +53,8 @@ readonly class Response implements ResponseInterface
 		return $this->body;
 	}
 
-	public function withBody(BodyInterface|Closure $body): static
+	public function withBody(BodyInterface $body): static
 	{
-		if ($body instanceof Closure) {
-			$body = $body($this->body);
-		}
-
-		if (!$body instanceof BodyInterface) {
-			throw new ResponseException('must provide body interface');
-		}
-
 		return new static($this->uuid, $this->statusCode, $this->headers, $body);
 	}
 

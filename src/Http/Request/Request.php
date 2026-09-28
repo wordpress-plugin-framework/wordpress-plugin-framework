@@ -9,7 +9,6 @@ use WordPressPluginFramework\{
 	Http\Url\UrlInterface,
 	Uuid\UuidInterface,
 };
-use Closure;
 
 readonly class Request implements RequestInterface
 {
@@ -45,16 +44,8 @@ readonly class Request implements RequestInterface
 		return $this->url;
 	}
 
-	public function withUrl(UrlInterface|Closure $url): static
+	public function withUrl(UrlInterface $url): static
 	{
-		if ($url instanceof Closure) {
-			$url = $url($this->url);
-		}
-
-		if (!$url instanceof UrlInterface) {
-			throw new RequestException('must provide url interface');
-		}
-
 		return new static($this->uuid, $this->method, $url, $this->headers, $this->body);
 	}
 
@@ -63,16 +54,8 @@ readonly class Request implements RequestInterface
 		return $this->headers;
 	}
 
-	public function withHeaders(HeadersInterface|Closure $headers): static
+	public function withHeaders(HeadersInterface $headers): static
 	{
-		if ($headers instanceof Closure) {
-			$headers = $headers($this->headers);
-		}
-
-		if (!$headers instanceof HeadersInterface) {
-			throw new RequestException('must provide header interface');
-		}
-
 		return new static($this->uuid, $this->method, $this->url, $headers, $this->body);
 	}
 
@@ -81,16 +64,8 @@ readonly class Request implements RequestInterface
 		return $this->body;
 	}
 
-	public function withBody(BodyInterface|Closure $body): static
+	public function withBody(BodyInterface $body): static
 	{
-		if ($body instanceof Closure) {
-			$body = $body($this->body);
-		}
-
-		if (!$body instanceof BodyInterface) {
-			throw new RequestException('must provide body interface');
-		}
-
 		return new static($this->uuid, $this->method, $this->url, $this->headers, $body);
 	}
 

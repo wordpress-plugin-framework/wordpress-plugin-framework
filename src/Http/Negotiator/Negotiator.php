@@ -53,8 +53,9 @@ readonly class Negotiator implements NegotiatorInterface
 
 	protected function withVary(ResponseInterface $response): ResponseInterface
 	{
-		return $response->withHeaders(fn($headers) => $headers->withVary(
-			fn(?VaryInterface $vary) => ($vary ?? new Vary([]))->with('accept'),
-		));
+		$vary = $response->headers()->vary() ?? new Vary();
+		$vary = $vary->with('accept');
+
+		return $response->withHeaders($response->headers()->withVary($vary));
 	}
 }

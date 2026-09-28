@@ -24,8 +24,17 @@ readonly class Rfc9110
 	public const PARAMETER_VALUE = '(?<parameter_value>' . self::TOKEN . '|' . self::QUOTED_STRING . ')';
 	public const PARAMETER = self::PARAMETER_NAME . '=' . self::PARAMETER_VALUE;
 	public const PARAMETERS = '(?<parameters>(?:' . self::OWS . ';' . self::OWS . '(?:' . self::PARAMETER . ')?)*)';
-	public const WEIGHT = self::OWS . ';' . self::OWS . '(?:Q|q)=(?<q>' . self::QVALUE . ')';
+	public const WEIGHT = self::OWS . ';' . self::OWS . '(?i:q=)(?<q>' . self::QVALUE . ')';
 	public const MEDIA_RANGE = '(?<media_range>' . self::TYPE . '/' . self::SUBTYPE . self::PARAMETERS . ')';
 	public const VARY = '(?:' . self::FIELD_NAME . ')?(?:' . self::OWS . ',' . self::OWS . '(?:' . self::FIELD_NAME . ')?)*';
 	public const ACCEPT = '(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?(?:' . self::OWS . ',' . self::OWS . '(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?)*';
+	public const AUTHORITY = Rfc3986::AUTHORITY;
+	public const URI_HOST = Rfc3986::HOST;
+	public const PORT = Rfc3986::PORT;
+	public const PATH_ABEMPTY = Rfc3986::PATH_ABEMPTY;
+	public const SEGMENT = Rfc3986::SEGMENT;
+	public const QUERY = Rfc3986::QUERY;
+	public const ABSOLUTE_PATH = '(?:/' . self::SEGMENT . ')+';
+	public const HTTP_URI = '(?i:http)://' . self::AUTHORITY . self::PATH_ABEMPTY . '(?:\?' . self::QUERY . ')?';
+	public const HTTPS_URI = '(?i:https)://' . self::AUTHORITY . self::PATH_ABEMPTY . '(?:\?' . self::QUERY . ')?';
 }
