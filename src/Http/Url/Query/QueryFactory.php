@@ -4,23 +4,22 @@ namespace WordPressPluginFramework\Http\Url\Query;
 
 use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Decoders\Query\DecoderInterface,
-	Http\Encoders\Query\EncoderInterface,
 	Http\Normalizers\NormalizersInterface,
+	Http\Url\Query\Decoders\DecodersInterface,
+	Http\Url\Query\Encoders\EncodersInterface,
 };
-use stdClass;
 
 readonly class QueryFactory implements QueryFactoryInterface
 {
 	public function __construct(
 		protected AccessorInterface $accessor,
-		protected DecoderInterface $decoder,
-		protected EncoderInterface $encoder,
+		protected DecodersInterface $decoders,
+		protected EncodersInterface $encoders,
 		protected NormalizersInterface $normalizers,
 	) {
 	}
 
-	public function create(mixed $query): QueryInterface
+	public function create(mixed $query, bool $squareBrackets = true): QueryInterface
 	{
 		if ($query instanceof QueryInterface) {
 			$query = $query();
@@ -28,25 +27,29 @@ readonly class QueryFactory implements QueryFactoryInterface
 
 		$normalizedQuery = $this->normalizers->normalize($query);
 
-		return $this->query($normalizedQuery);
-	}
+		$encodersBySquareBrackets = $this->encoders->filter(fn($encoder) => $encoder->squareBrackets() === $squareBrackets);
+		if ($encodersBySquareBrackets->isEmpty()) {
+			throw new QueryFactoryException('no encoder for these square brackets');
+		}
 
-	public function createFromEncoded(string $query): QueryInterface
-	{
-		$decodedQuery = $this->decoder->decode($query);
-
-		return $this->create($decodedQuery);
-	}
-
-	protected function query(mixed $query): QueryInterface
-	{
-		if (
-			!is_array($query) &&
-			!$query instanceof stdClass
-		) {
+		$encodersByQuery = $encodersBySquareBrackets->filter(fn($encoder) => $encoder->encodesQuery($normalizedQuery));
+		if ($encodersByQuery->isEmpty()) {
 			throw new QueryFactoryException('no encoder for this query');
 		}
 
-		return new Query($this->accessor, $this->encoder, $query);
+		$encoder = $encodersByQuery->first();
+
+		return new Query($this->accessor, $encoder, $normalizedQuery);
+	}
+
+	public function createFromEncoded(string $query, bool $squareBrackets = true): QueryInterface
+	{
+		$decoder = $this->decoders
+			->filter(fn($decoder) => $decoder->squareBrackets() === $squareBrackets)
+			->first();
+
+		$decodedQuery = $decoder->decode($query);
+
+		return $this->create($decodedQuery, $squareBrackets);
 	}
 }

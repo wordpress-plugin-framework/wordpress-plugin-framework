@@ -23,11 +23,11 @@ readonly class Rfc3986
 		. ')';
 	public const H16 = '(?:' . Rfc5234::HEXDIG . '){1,4}';
 	public const LS32 = '(?:(?:' . self::H16 . ':' . self::H16 . ')|' . self::IPV4ADDRESS . ')';
-	public const IPV4ADDRESS = '(?<ipv4address>' . self::DEC_OCTET . '\.' . self::DEC_OCTET . '\.' . self::DEC_OCTET . '\.' . self::DEC_OCTET . ')';
+	public const IPV4ADDRESS = '(?:' . self::DEC_OCTET . '\.' . self::DEC_OCTET . '\.' . self::DEC_OCTET . '\.' . self::DEC_OCTET . ')';
 	public const DEC_OCTET = '(?:' . Rfc5234::DIGIT . '|[\x31-\x39]' . Rfc5234::DIGIT . '|1(?:' . Rfc5234::DIGIT . '){2}|2[\x30-\x34]' . Rfc5234::DIGIT . '|25[\x30-\x35])';
 	public const REG_NAME = '(?<reg_name>(?:' . self::UNRESERVED . '|' . self::PCT_ENCODED . '|' . self::SUB_DELIMS . ')*)';
 	public const PATH_ABEMPTY = '(?<path_abempty>(?:/' . self::SEGMENT . ')*)';
-	public const SEGMENT = '(?:' . self::PCHAR . ')*';
+	public const SEGMENT = '(?<segment>(?:' . self::PCHAR . ')*)';
 	public const PCHAR = '(?:' . self::UNRESERVED . '|' . self::PCT_ENCODED . '|' . self::SUB_DELIMS . '|:|\@)';
 	public const QUERY = '(?<query>(?:' . self::PCHAR . '|/|\?)*)';
 	public const PCT_ENCODED = '(?:%' . Rfc5234::HEXDIG . Rfc5234::HEXDIG . ')';

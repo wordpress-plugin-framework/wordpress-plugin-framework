@@ -4,9 +4,6 @@ namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule
 
 interface RulesBuilderInterface
 {
-	public function withRules(RuleInterface ...$rules): static;
-	public function withoutRules(): static;
-
 	public function withRule(RuleInterface $rule): static;
 
 	public function array(): static;

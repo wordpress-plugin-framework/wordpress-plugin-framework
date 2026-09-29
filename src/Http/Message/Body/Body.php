@@ -3,7 +3,7 @@
 namespace WordPressPluginFramework\Http\Message\Body;
 
 use WordPressPluginFramework\{
-	Http\Encoders\EncoderInterface,
+	Http\Message\Body\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };
 

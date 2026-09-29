@@ -3,7 +3,7 @@
 namespace WordPressPluginFramework\Http\Url\Host;
 
 use WordPressPluginFramework\{
-	Http\Abnf\Rfc3629,
+	Http\Abnf\Rfc3986,
 	Http\Abnf\Rfc9110,
 };
 
@@ -11,26 +11,16 @@ readonly class HostFactory implements HostFactoryInterface
 {
 	public function create(string $host): HostInterface
 	{
-		$encoded = $this->encode($host);
-		$match = $this->match($encoded);
-		$decoded = rawurldecode($match['host']);
+		$this->validate($host);
+
+		$decoded = $this->decode($host);
 
 		return new Host($decoded);
 	}
 
-	protected function encode(string $host): string
+	protected function validate(string $host): void
 	{
-		$encoded = preg_replace_callback('@' . Rfc3629::UTF8_2 . '|' . Rfc3629::UTF8_3 . '|' . Rfc3629::UTF8_4 . '@', fn($match) => rawurlencode($match[0]), $host);
-		if ($encoded === null) {
-			throw new HostFactoryException('host is not encodable');
-		}
-
-		return $encoded;
-	}
-
-	protected function match(string $host): array
-	{
-		$matched = preg_match('@\A' . Rfc9110::URI_HOST . '\z@J', $host, $match, PREG_UNMATCHED_AS_NULL);
+		$matched = preg_match('@\A' . Rfc9110::URI_HOST . '\z@', $host);
 		if ($matched === false) {
 			throw new HostFactoryException('host is not checkable');
 		}
@@ -38,7 +28,15 @@ readonly class HostFactory implements HostFactoryInterface
 		if ($matched !== 1) {
 			throw new HostFactoryException('invalid host');
 		}
+	}
 
-		return $match;
+	protected function decode(string $host): string
+	{
+		$decoded = preg_replace_callback('@' . Rfc3986::PCT_ENCODED . '@', fn($match) => rawurldecode($match[0]), $host);
+		if ($decoded === null) {
+			throw new HostFactoryException('host is not decodable');
+		}
+
+		return $decoded;
 	}
 }

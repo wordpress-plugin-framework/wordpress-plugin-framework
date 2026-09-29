@@ -12,14 +12,6 @@ readonly class Validators implements ValidatorInterface
 	) {
 	}
 
-	public function with(ValidatorInterface $validator): static
-	{
-		$validators = $this->validators;
-		$validators[] = $validator;
-
-		return new static($validators);
-	}
-
 	public function validate(RequestInterface $request, Closure $closure): void
 	{
 		foreach ($this->validators as $validator) {

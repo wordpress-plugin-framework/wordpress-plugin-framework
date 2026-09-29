@@ -1,11 +1,11 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Decoders\Json;
+namespace WordPressPluginFramework\Http\Message\Body\Decoders\Json;
 
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc6838,
-	Http\Decoders\DecoderException,
-	Http\Decoders\DecoderInterface,
+	Http\Message\Body\Decoders\DecoderException,
+	Http\Message\Body\Decoders\DecoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };

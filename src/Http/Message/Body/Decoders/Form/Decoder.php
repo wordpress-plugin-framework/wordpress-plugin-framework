@@ -1,10 +1,10 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Decoders\Form;
+namespace WordPressPluginFramework\Http\Message\Body\Decoders\Form;
 
 use WordPressPluginFramework\{
-	Http\Decoders\DecoderException,
-	Http\Decoders\DecoderInterface,
+	Http\Message\Body\Decoders\DecoderException,
+	Http\Message\Body\Decoders\DecoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };

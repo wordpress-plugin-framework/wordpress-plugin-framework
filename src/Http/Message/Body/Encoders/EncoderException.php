@@ -1,6 +1,6 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Encoders;
+namespace WordPressPluginFramework\Http\Message\Body\Encoders;
 
 use Exception;
 

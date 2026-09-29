@@ -1,6 +1,6 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Message\Body\Encoders;
+namespace WordPressPluginFramework\Http\Url\Query\Encoders;
 
 use ArrayIterator;
 use Closure;
@@ -11,22 +11,6 @@ readonly class Encoders implements EncodersInterface
 	public function __construct(
 		protected array $encoders,
 	) {
-	}
-
-	public function contentTypes(): array
-	{
-		$contentTypes = [];
-
-		foreach ($this->encoders as $encoder) {
-			$contentType = $encoder->contentType();
-			if (in_array($contentType, $contentTypes)) {
-				continue;
-			}
-
-			$contentTypes[] = $contentType;
-		}
-
-		return $contentTypes;
 	}
 
 	public function first(): EncoderInterface

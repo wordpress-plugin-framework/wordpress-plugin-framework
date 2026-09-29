@@ -23,24 +23,9 @@ readonly class ValidatorBuilder implements ValidatorBuilderInterface
 	) {
 	}
 
-	public function comparator(): ?ComparatorInterface
-	{
-		return $this->comparator;
-	}
-
 	public function withComparator(ComparatorInterface $comparator): static
 	{
 		return new static($comparator, $this->a, $this->operator, $this->b);
-	}
-
-	public function withoutComparator(): static
-	{
-		return new static(null, $this->a, $this->operator, $this->b);
-	}
-
-	public function a(): ?KeyValueInterface
-	{
-		return $this->a;
 	}
 
 	public function withA(KeyValueInterface $a): static
@@ -48,39 +33,14 @@ readonly class ValidatorBuilder implements ValidatorBuilderInterface
 		return new static($this->comparator, $a, $this->operator, $this->b);
 	}
 
-	public function withoutA(): static
-	{
-		return new static($this->comparator, null, $this->operator, $this->b);
-	}
-
-	public function operator(): ?Operator
-	{
-		return $this->operator;
-	}
-
 	public function withOperator(Operator $operator): static
 	{
 		return new static($this->comparator, $this->a, $operator, $this->b);
 	}
 
-	public function withoutOperator(): static
-	{
-		return new static($this->comparator, $this->a, null, $this->b);
-	}
-
-	public function b(): ?KeyValueInterface
-	{
-		return $this->b;
-	}
-
 	public function withB(KeyValueInterface $b): static
 	{
 		return new static($this->comparator, $this->a, $this->operator, $b);
-	}
-
-	public function withoutB(): static
-	{
-		return new static($this->comparator, $this->a, $this->operator, null);
 	}
 
 	public function body(string $key): static

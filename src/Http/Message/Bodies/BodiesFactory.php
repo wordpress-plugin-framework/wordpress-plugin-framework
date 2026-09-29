@@ -4,7 +4,7 @@ namespace WordPressPluginFramework\Http\Message\Bodies;
 
 use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Encoders\EncodersInterface,
+	Http\Message\Body\Encoders\EncodersInterface,
 	Http\Message\Body\Accessor,
 	Http\Message\Body\Body,
 	Http\Message\Body\BodyInterface,

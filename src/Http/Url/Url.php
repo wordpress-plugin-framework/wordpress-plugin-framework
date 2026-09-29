@@ -108,7 +108,7 @@ readonly class Url implements UrlInterface
 			return;
 		}
 
-		if (!preg_match('@\A' . Rfc3986::PORT . '\z@J', $port)) {
+		if (!preg_match('@\A' . Rfc3986::PORT . '\z@', $port)) {
 			throw new UrlException('invalid port');
 		}
 	}

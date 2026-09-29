@@ -7,6 +7,7 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc9110,
 	Http\Url\Host\HostFactoryInterface,
 	Http\Url\Path\PathFactoryInterface,
+	Http\Url\PercentEncoder\PercentEncoderInterface,
 	Http\Url\Query\QueryFactoryInterface,
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,
@@ -15,6 +16,7 @@ use WordPressPluginFramework\{
 readonly class UrlFactory implements UrlFactoryInterface
 {
 	public function __construct(
+		protected PercentEncoderInterface $percentEncoder,
 		protected HostFactoryInterface $hostFactory,
 		protected PathFactoryInterface $pathFactory,
 		protected QueryFactoryInterface $queryFactory,
@@ -23,47 +25,37 @@ readonly class UrlFactory implements UrlFactoryInterface
 
 	public function create(string $url): UrlInterface
 	{
-		$components = $this->components($url);
+		if (preg_match('@' . Rfc3986::APPENDIX_B . '@s', $url, $match, PREG_UNMATCHED_AS_NULL) === false) {
+			throw new UrlFactoryException('url is not checkable');
+		}
 
-		if ($components['scheme'] === null) {
+		if ($match['scheme'] === null) {
 			throw new UrlFactoryException('missing scheme');
 		}
 
-		if ($components['authority'] === null) {
+		if ($match['authority'] === null) {
 			throw new UrlFactoryException('missing authority');
 		}
 
-		if ($components['fragment'] !== null) {
+		if ($match['fragment'] !== null) {
 			throw new UrlFactoryException('fragment is not part of http(s) urls');
 		}
 
-		$scheme = Scheme::create($components['scheme']);
-		$authority = $this->authority($components['authority']);
+		$authority = $this->authority($match['authority']);
+
+		$scheme = Scheme::create($match['scheme']);
+
 		$host = $this->hostFactory->create($authority['host']);
-		$path = $this->pathFactory->create($components['path']);
-		$query = $this->query($components['query']);
+		$encodedPath = $this->percentEncoder->encodePath($match['path']);
+		$path = $this->pathFactory->create($encodedPath);
+		$query = $match['query'] === null ? null : $this->queryFactory->create($match['query']);
 
 		return new Url($scheme, $host, $authority['port'], $path, $query);
 	}
 
-	protected function components(string $url): array
-	{
-		$matched = preg_match('@' . Rfc3986::APPENDIX_B . '@s', $url, $match, PREG_UNMATCHED_AS_NULL);
-		if ($matched === false) {
-			throw new UrlFactoryException('url is not checkable');
-		}
-
-		return $match;
-	}
-
 	protected function authority(string $authority): array
 	{
-		$matched = preg_match('@\A' . Rfc9110::AUTHORITY . '\z@J', $authority, $match, PREG_UNMATCHED_AS_NULL);
-		if ($matched === false) {
-			throw new UrlFactoryException('authority is not checkable');
-		}
-
-		if ($matched !== 1) {
+		if (preg_match('@\A' . Rfc9110::AUTHORITY . '\z@', $authority, $match, PREG_UNMATCHED_AS_NULL) !== 1) {
 			throw new UrlFactoryException('invalid authority');
 		}
 
@@ -71,15 +63,10 @@ readonly class UrlFactory implements UrlFactoryInterface
 			throw new UrlFactoryException('userinfo is deprecated in http(s) urls');
 		}
 
-		return $match;
-	}
-
-	protected function query(?string $query): ?QueryInterface
-	{
-		if ($query === null) {
-			return null;
+		if ($match['host'] === '') {
+			throw new UrlFactoryException('empty host identifier');
 		}
 
-		return $this->queryFactory->createFromEncoded($query);
+		return $match;
 	}
 }

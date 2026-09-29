@@ -3,11 +3,16 @@
 namespace WordPressPluginFramework\Http\Url\Path;
 
 use ArrayIterator;
-use WordPressPluginFramework\Http\Abnf\Rfc3986;
+use WordPressPluginFramework\{
+	Http\Abnf\Rfc3986,
+	Http\Abnf\Rfc5234,
+};
 use Traversable;
 
 readonly class Path implements PathInterface
 {
+	protected const PCT_DECODED = '(?!' . Rfc3986::UNRESERVED . '|' . Rfc3986::SUB_DELIMS . '|:|\@)' . Rfc5234::OCTET;
+
 	protected array $segments;
 
 	public function __construct(array $segments)
@@ -16,12 +21,12 @@ readonly class Path implements PathInterface
 		$this->segments = array_values($segments);
 	}
 
-	public function has(string $segment): bool
+	public function hasSegment(string $segment): bool
 	{
 		return in_array($segment, $this->segments, true);
 	}
 
-	public function with(string $segment): static
+	public function withSegment(string $segment): static
 	{
 		$segments = $this->segments;
 		$segments[] = $segment;
@@ -29,7 +34,7 @@ readonly class Path implements PathInterface
 		return new static($segments);
 	}
 
-	public function without(string $segment): static
+	public function withoutSegment(string $segment): static
 	{
 		$segments = [];
 
@@ -74,8 +79,7 @@ readonly class Path implements PathInterface
 		$path = '';
 
 		foreach ($this->segments as $segment) {
-			$encoded = $this->encode($segment);
-			$path .= '/' . $encoded;
+			$path .= '/' . $this->encodeSegment($segment);
 		}
 
 		return $path;
@@ -97,22 +101,13 @@ readonly class Path implements PathInterface
 		}
 	}
 
-	protected function encode(string $segment): string
+	protected function encodeSegment(string $segment): string
 	{
-		$pattern = '@(?!' . Rfc3986::UNRESERVED . '|' . Rfc3986::SUB_DELIMS . '|:|\@)(.)@s';
-
-		$encoded = preg_replace_callback($pattern, $this->pctEncoded(...), $segment);
+		$encoded = preg_replace_callback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $segment);
 		if ($encoded === null) {
 			throw new PathException('segment is not encodable');
 		}
 
 		return $encoded;
-	}
-
-	protected function pctEncoded(array $match): string
-	{
-		$hex = bin2hex($match[1]);
-
-		return '%' . strtoupper($hex);
 	}
 }

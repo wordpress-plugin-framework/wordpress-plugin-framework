@@ -5,7 +5,7 @@ namespace WordPressPluginFramework\Http\Message\Body\Accessor;
 use ArrayIterator;
 use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Encoders\EncoderInterface,
+	Http\Message\Body\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 };
 use stdClass;

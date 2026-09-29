@@ -5,7 +5,7 @@ namespace WordPressPluginFramework\Http\Url\Query;
 use ArrayIterator;
 use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Encoders\Query\EncoderInterface,
+	Http\Url\Query\Encoders\EncoderInterface,
 };
 use stdClass;
 use Traversable;
@@ -79,10 +79,6 @@ readonly class Query implements QueryInterface
 
 	public function __toString(): string
 	{
-		if ($this->isEmpty()) {
-			return '';
-		}
-
 		return $this->encoder->encode($this->query);
 	}
 }

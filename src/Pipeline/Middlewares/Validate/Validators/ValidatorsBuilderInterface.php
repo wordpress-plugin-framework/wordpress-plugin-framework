@@ -6,9 +6,6 @@ use Closure;
 
 interface ValidatorsBuilderInterface
 {
-    public function withValidators(ValidatorInterface ...$validators): static;
-    public function withoutValidators(): static;
-
     public function withValidator(ValidatorInterface $validator): static;
 
     public function body(string $key, Closure $closure): static;

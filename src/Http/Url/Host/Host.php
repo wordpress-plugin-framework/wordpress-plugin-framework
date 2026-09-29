@@ -9,12 +9,14 @@ use WordPressPluginFramework\{
 
 readonly class Host implements HostInterface
 {
+	protected const PCT_DECODED = '(?:' . Rfc3629::UTF8_2 . '|' . Rfc3629::UTF8_3 . '|' . Rfc3629::UTF8_4 . ')';
+
 	protected string $host;
 
 	public function __construct(string $host)
 	{
 		$this->validate($host);
-		$this->host = strtolower($host);
+		$this->host = $this->normalize($host);
 	}
 
 	public function __invoke(): string
@@ -24,17 +26,12 @@ readonly class Host implements HostInterface
 
 	public function __toString(): string
 	{
-		$encoded = preg_replace_callback('@' . Rfc3629::UTF8_2 . '|' . Rfc3629::UTF8_3 . '|' . Rfc3629::UTF8_4 . '@', fn($match) => rawurlencode($match[0]), $this->host);
-		if ($encoded === null) {
-			throw new HostException('host is not encodable');
-		}
-
-		return $encoded;
+		return $this->encode($this->host);
 	}
 
 	protected function validate(string $host): void
 	{
-		$matched = preg_match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . Rfc3986::SUB_DELIMS . '|' . Rfc3629::UTF8_2 . '|' . Rfc3629::UTF8_3 . '|' . Rfc3629::UTF8_4 . ')*)\z@J', $host);
+		$matched = preg_match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . self::PCT_DECODED . '|' . Rfc3986::SUB_DELIMS . ')*)\z@', $host);
 		if ($matched === false) {
 			throw new HostException('host is not checkable');
 		}
@@ -42,5 +39,20 @@ readonly class Host implements HostInterface
 		if ($matched !== 1) {
 			throw new HostException('invalid host');
 		}
+	}
+
+	protected function normalize(string $host): string
+	{
+		return strtolower($host);
+	}
+
+	protected function encode(string $host): string
+	{
+		$encoded = preg_replace_callback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $host);
+		if ($encoded === null) {
+			throw new HostException('host is not encodable');
+		}
+
+		return $encoded;
 	}
 }

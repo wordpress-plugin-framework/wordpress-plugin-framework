@@ -4,8 +4,8 @@ namespace WordPressPluginFramework\Http\Message\Body;
 
 use WordPressPluginFramework\{
 	Http\Accessor\AccessorInterface,
-	Http\Decoders\DecodersInterface,
-	Http\Encoders\EncodersInterface,
+	Http\Message\Body\Decoders\DecodersInterface,
+	Http\Message\Body\Encoders\EncodersInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeFactoryInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Http\Normalizers\NormalizersInterface,

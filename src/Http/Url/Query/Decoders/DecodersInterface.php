@@ -1,19 +1,17 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Message\Body\Encoders;
+namespace WordPressPluginFramework\Http\Url\Query\Decoders;
 
 use Countable;
 use Closure;
 use IteratorAggregate;
 
-interface EncodersInterface extends IteratorAggregate, Countable
+interface DecodersInterface extends IteratorAggregate, Countable
 {
 	public function __invoke(): array;
 
-	public function contentTypes(): array;
-
-	public function first(): EncoderInterface;
-	public function last(): EncoderInterface;
+	public function first(): DecoderInterface;
+	public function last(): DecoderInterface;
 
 	public function filter(Closure $closure): static;
 	public function map(Closure $closure): static;

@@ -1,10 +1,10 @@
 <?php
 
-namespace WordPressPluginFramework\Http\Encoders\View;
+namespace WordPressPluginFramework\Http\Message\Body\Encoders\View;
 
 use WordPressPluginFramework\{
-	Http\Encoders\EncoderException,
-	Http\Encoders\EncoderInterface,
+	Http\Message\Body\Encoders\EncoderException,
+	Http\Message\Body\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
 	Renderer\RendererInterface,
