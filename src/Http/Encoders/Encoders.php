@@ -11,7 +11,6 @@ readonly class Encoders implements EncodersInterface
 	public function __construct(
 		protected array $encoders,
 	) {
-		$this->validate($this->encoders);
 	}
 
 	public function contentTypes(): array
@@ -97,14 +96,5 @@ readonly class Encoders implements EncodersInterface
 	public function __invoke(): array
 	{
 		return array_values($this->encoders);
-	}
-
-	protected function validate(array $encoders): void
-	{
-		foreach ($encoders as $encoder) {
-			if (!$encoder instanceof EncoderInterface) {
-				throw new EncodersException('must provide encoder interface');
-			}
-		}
 	}
 }

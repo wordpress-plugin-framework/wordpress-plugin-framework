@@ -12,9 +12,9 @@ use WordPressPluginFramework\{
 readonly class Validator implements ValidatorInterface
 {
 	public function __construct(
-		protected array $expressionValidators,
-		protected array $ifStatementValidators = [],
-		protected array $elseStatementValidators = [],
+		protected ValidatorInterface $expressionValidators,
+		protected ValidatorInterface $ifStatementValidators,
+		protected ValidatorInterface $elseStatementValidators,
 	) {
 	}
 
@@ -22,21 +22,15 @@ readonly class Validator implements ValidatorInterface
 	{
 		$messages = new MessageCollection();
 
-		foreach ($this->expressionValidators as $expressionValidator) {
-			$expressionValidator->validate(
-				$request,
-				$messages->add(...),
-			);
-		}
+		$this->expressionValidators->validate(
+			$request,
+			$messages->add(...),
+		);
 
 		if ($messages->isEmpty()) {
-			foreach ($this->ifStatementValidators as $statementValidator) {
-				$statementValidator->validate($request, $closure);
-			}
+			$this->ifStatementValidators->validate($request, $closure);
 		} else {
-			foreach ($this->elseStatementValidators as $statementValidator) {
-				$statementValidator->validate($request, $closure);
-			}
+			$this->elseStatementValidators->validate($request, $closure);
 		}
 	}
 }

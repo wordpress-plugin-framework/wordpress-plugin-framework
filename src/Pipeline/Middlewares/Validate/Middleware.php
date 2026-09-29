@@ -7,12 +7,13 @@ use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Collections\Message\Collection as MessageCollection,
 	Pipeline\Middlewares\MiddlewareInterface,
+	Pipeline\Middlewares\Validate\Validators\ValidatorInterface,
 };
 
 readonly class Middleware implements MiddlewareInterface
 {
 	public function __construct(
-		protected array $validators,
+		protected ValidatorInterface $validator,
 	) {
 	}
 
@@ -20,12 +21,10 @@ readonly class Middleware implements MiddlewareInterface
 	{
 		$messages = new MessageCollection();
 
-		foreach ($this->validators as $validator) {
-			$validator->validate(
-				$request,
-				$messages->add(...),
-			);
-		}
+		$this->validator->validate(
+			$request,
+			$messages->add(...),
+		);
 
 		if ($messages->isNotEmpty()) {
 			throw new Exceptions\UnprocessableContent\Exception(

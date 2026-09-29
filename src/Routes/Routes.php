@@ -2,7 +2,7 @@
 
 namespace WordPressPluginFramework\Routes;
 
-readonly class Routes implements RoutesInterface
+readonly class Routes implements RouteInterface
 {
 	public function __construct(
 		protected array $routes,

@@ -14,5 +14,5 @@ interface HooksBuilderInterface
 	public function activation(string $file, Closure $closure): static;
 	public function deactivation(string $file, Closure $closure): static;
 
-	public function build(): HooksInterface;
+	public function build(): HookInterface;
 }

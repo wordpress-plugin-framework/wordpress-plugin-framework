@@ -21,33 +21,23 @@ use WordPressPluginFramework\{
 readonly class RulesBuilder implements RulesBuilderInterface
 {
 	public function __construct(
-		protected array $rules = [],
+		protected Rules $rules = new Rules(),
 	) {
-	}
-
-	public function rules(): array
-	{
-		return $this->rules;
 	}
 
 	public function withRules(RuleInterface ...$rules): static
 	{
-		return new static($rules);
+		return new static(new Rules($rules));
 	}
 
 	public function withoutRules(): static
 	{
-		return new static([]);
+		return new static(new Rules());
 	}
 
 	public function withRule(RuleInterface $rule): static
 	{
-		return $this->withRules(
-			...[
-				...$this->rules,
-				$rule,
-			],
-		);
+		return new static($this->rules->with($rule));
 	}
 
 	public function array(): static
@@ -141,7 +131,7 @@ readonly class RulesBuilder implements RulesBuilderInterface
 		);
 	}
 
-	public function build(): array
+	public function build(): RuleInterface
 	{
 		return $this->rules;
 	}

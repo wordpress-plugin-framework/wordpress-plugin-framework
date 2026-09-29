@@ -100,10 +100,6 @@ readonly class Responses implements ResponsesInterface
 	protected function validate(array $responses): void
 	{
 		foreach ($responses as $response) {
-			if (!$response instanceof ResponseInterface) {
-				throw new ResponsesException('must provide response interface');
-			}
-
 			$contentType = $response->headers()->contentType();
 			if ($contentType === null) {
 				throw new ResponsesException('response without content-type is not negotiable');

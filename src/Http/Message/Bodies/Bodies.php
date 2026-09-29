@@ -12,7 +12,6 @@ readonly class Bodies implements BodiesInterface
 	public function __construct(
 		protected array $bodies = [],
 	) {
-		$this->validate($this->bodies);
 	}
 
 	public function first(): BodyInterface
@@ -82,14 +81,5 @@ readonly class Bodies implements BodiesInterface
 	public function __invoke(): array
 	{
 		return array_values($this->bodies);
-	}
-
-	protected function validate(array $bodies): void
-	{
-		foreach ($bodies as $body) {
-			if (!$body instanceof BodyInterface) {
-				throw new BodiesException('must provide body interface');
-			}
-		}
 	}
 }

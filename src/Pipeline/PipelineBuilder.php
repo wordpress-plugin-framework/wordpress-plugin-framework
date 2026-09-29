@@ -10,7 +10,8 @@ use WordPressPluginFramework\{
 	Pipeline\Middlewares\CurrentUserCan\Capability\Capability,
 	Pipeline\Middlewares\LogExecutionTime\MiddlewareFactoryInterface as LogExecutionTimeMiddlewareFactoryInterface,
 	Pipeline\Middlewares\Transaction\MiddlewareFactoryInterface as TransactionMiddlewareFactoryInterface,
-	Pipeline\Middlewares\Validate\MiddlewareFactoryInterface as ValidateMiddlewareFactoryInterface,
+	Pipeline\Middlewares\Validate\Middleware as ValidateMiddleware,
+	Pipeline\Middlewares\Validate\Validators\ValidatorsBuilderInterface,
 	Pipeline\Middlewares\VerifyNonce\Middleware as VerifyNonceMiddleware,
 };
 
@@ -19,7 +20,7 @@ readonly class PipelineBuilder implements PipelineBuilderInterface
 	public function __construct(
 		protected LogExecutionTimeMiddlewareFactoryInterface $logExecutionTimeMiddlewareFactory,
 		protected TransactionMiddlewareFactoryInterface $transactionMiddlewareFactory,
-		protected ValidateMiddlewareFactoryInterface $validateMiddlewareFactory,
+		protected ValidatorsBuilderInterface $validatorsBuilder,
 		protected RequestInterface $request,
 		protected array $middlewares = [],
 	) {
@@ -30,7 +31,7 @@ readonly class PipelineBuilder implements PipelineBuilderInterface
 		$middlewares = $this->middlewares;
 		$middlewares[] = $middleware;
 
-		return new static($this->logExecutionTimeMiddlewareFactory, $this->transactionMiddlewareFactory, $this->validateMiddlewareFactory, $middlewares);
+		return new static($this->logExecutionTimeMiddlewareFactory, $this->transactionMiddlewareFactory, $this->validatorsBuilder, $this->request, $middlewares);
 	}
 
 	public function currentUserCan(Capability $capability): static
@@ -59,7 +60,12 @@ readonly class PipelineBuilder implements PipelineBuilderInterface
 
 	public function validate(Closure $closure): static
 	{
-		$middleware = $this->validateMiddlewareFactory->create($closure);
+		$validatorsBuilder = $closure($this->validatorsBuilder);
+		if (!$validatorsBuilder instanceof ValidatorsBuilderInterface) {
+			throw new PipelineBuilderException('closure must return validators builder instance');
+		}
+
+		$middleware = new ValidateMiddleware($validatorsBuilder->build());
 		return $this->withMiddleware($middleware);
 	}
 

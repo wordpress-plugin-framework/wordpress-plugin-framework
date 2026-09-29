@@ -57,7 +57,7 @@ readonly class RoutesBuilder implements RoutesBuilderInterface
 		);
 	}
 
-	public function build(): RoutesInterface
+	public function build(): RouteInterface
 	{
 		return new Routes($this->routes);
 	}

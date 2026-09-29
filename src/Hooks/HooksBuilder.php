@@ -51,7 +51,7 @@ readonly class HooksBuilder implements HooksBuilderInterface
 		return $this->withHook($hook);
 	}
 
-	public function build(): HooksInterface
+	public function build(): HookInterface
 	{
 		return new Hooks($this->hooks);
 	}

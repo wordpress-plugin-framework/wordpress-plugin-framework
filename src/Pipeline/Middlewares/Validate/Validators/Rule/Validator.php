@@ -6,6 +6,7 @@ use Closure;
 use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
+	Pipeline\Middlewares\Validate\Validators\Rule\Rules\RuleInterface,
 	Pipeline\Middlewares\Validate\Validators\ValidatorInterface,
 };
 
@@ -13,7 +14,7 @@ readonly class Validator implements ValidatorInterface
 {
 	public function __construct(
 		protected KeyValueInterface $keyValue,
-		protected array $rules = [],
+		protected RuleInterface $rule,
 	) {
 	}
 
@@ -26,11 +27,7 @@ readonly class Validator implements ValidatorInterface
 			$closure($key, 'no content to validate');
 		} else {
 			foreach ($values as $key => $value) {
-				foreach ($this->rules as $rule) {
-					if ($rule->break($value, fn($message) => $closure($key, $message))) {
-						break;
-					}
-				}
+				$this->rule->break($value, fn($message) => $closure($key, $message));
 			}
 		}
 	}

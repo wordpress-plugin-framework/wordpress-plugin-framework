@@ -6,7 +6,6 @@ use Closure;
 
 interface ValidatorsBuilderInterface
 {
-    public function validators(): array;
     public function withValidators(ValidatorInterface ...$validators): static;
     public function withoutValidators(): static;
 
@@ -23,5 +22,5 @@ interface ValidatorsBuilderInterface
     public function compareInts(Closure $closure): static;
     public function compareStrings(Closure $closure): static;
 
-    public function build(): array;
+    public function build(): ValidatorInterface;
 }

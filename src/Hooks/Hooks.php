@@ -2,7 +2,7 @@
 
 namespace WordPressPluginFramework\Hooks;
 
-readonly class Hooks implements HooksInterface
+readonly class Hooks implements HookInterface
 {
 	public function __construct(
 		protected array $hooks,

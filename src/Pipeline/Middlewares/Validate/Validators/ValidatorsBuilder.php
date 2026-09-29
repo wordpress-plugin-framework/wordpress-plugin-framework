@@ -5,7 +5,8 @@ namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators;
 use Closure;
 use WordPressPluginFramework\{
     Pipeline\Middlewares\Validate\Validators\Condition\Validator as ConditionValidator,
-    Pipeline\Middlewares\Validate\Validators\Rule\ValidatorFactoryInterface as RuleValidatorFactoryInterface,
+    Pipeline\Middlewares\Validate\Validators\Rule\Validator as RuleValidator,
+    Pipeline\Middlewares\Validate\Validators\Rule\Rules\RulesBuilderInterface,
     Pipeline\Middlewares\Validate\KeyValue\KeyValueInterface,
     Pipeline\Middlewares\Validate\KeyValue\Body\KeyValue as Body,
     Pipeline\Middlewares\Validate\KeyValue\Query\KeyValue as Query,
@@ -21,36 +22,26 @@ use WordPressPluginFramework\{
 readonly class ValidatorsBuilder implements ValidatorsBuilderInterface
 {
     public function __construct(
-        protected RuleValidatorFactoryInterface $ruleValidatorFactory,
+        protected RulesBuilderInterface $rulesBuilder,
         protected DateTimeComparatorFactoryInterface $dateTimeComparatorFactory,
         protected ComparisonValidatorBuilderInterface $comparisonValidatorBuilder,
-        protected array $validators = [],
+        protected Validators $validators = new Validators(),
     ) {
-    }
-
-    public function validators(): array
-    {
-        return $this->validators;
     }
 
     public function withValidators(ValidatorInterface ...$validators): static
     {
-        return new static($this->ruleValidatorFactory, $this->dateTimeComparatorFactory, $this->comparisonValidatorBuilder, $validators);
+        return new static($this->rulesBuilder, $this->dateTimeComparatorFactory, $this->comparisonValidatorBuilder, new Validators($validators));
     }
 
     public function withoutValidators(): static
     {
-        return new static($this->ruleValidatorFactory, $this->dateTimeComparatorFactory, $this->comparisonValidatorBuilder, []);
+        return new static($this->rulesBuilder, $this->dateTimeComparatorFactory, $this->comparisonValidatorBuilder, new Validators());
     }
 
     public function withValidator(ValidatorInterface $validator): static
     {
-        return $this->withValidators(
-            ...[
-                ...$this->validators,
-                $validator,
-            ],
-        );
+        return new static($this->rulesBuilder, $this->dateTimeComparatorFactory, $this->comparisonValidatorBuilder, $this->validators->with($validator));
     }
 
     public function body(string $key, Closure $closure): static
@@ -79,8 +70,13 @@ readonly class ValidatorsBuilder implements ValidatorsBuilderInterface
 
     protected function withRuleValidator(KeyValueInterface $keyValue, Closure $closure): static
     {
+        $rulesBuilder = $closure($this->rulesBuilder);
+        if (!$rulesBuilder instanceof RulesBuilderInterface) {
+            throw new ValidatorsBuilderException('closure must return rules builder instance');
+        }
+
         return $this->withValidator(
-            $this->ruleValidatorFactory->create($keyValue, $closure),
+            new RuleValidator($keyValue, $rulesBuilder->build()),
         );
     }
 
@@ -127,12 +123,12 @@ readonly class ValidatorsBuilder implements ValidatorsBuilderInterface
         );
     }
 
-    public function build(): array
+    public function build(): ValidatorInterface
     {
         return $this->validators;
     }
 
-    protected function buildValidators(Closure $validatorsBuilderClosure): array
+    protected function buildValidators(Closure $validatorsBuilderClosure): ValidatorInterface
     {
         $validatorsBuilder = $validatorsBuilderClosure(
             $this->withoutValidators(),
@@ -144,10 +140,10 @@ readonly class ValidatorsBuilder implements ValidatorsBuilderInterface
         return $validatorsBuilder->build();
     }
 
-    protected function tryBuildValidators(?Closure $validatorsBuilderClosure): array
+    protected function tryBuildValidators(?Closure $validatorsBuilderClosure): ValidatorInterface
     {
         if ($validatorsBuilderClosure === null) {
-            return [];
+            return new Validators();
         }
 
         return $this->buildValidators($validatorsBuilderClosure);

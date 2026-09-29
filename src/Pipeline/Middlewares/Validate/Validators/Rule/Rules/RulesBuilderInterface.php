@@ -2,11 +2,8 @@
 
 namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule\Rules;
 
-use Closure;
-
 interface RulesBuilderInterface
 {
-	public function rules(): array;
 	public function withRules(RuleInterface ...$rules): static;
 	public function withoutRules(): static;
 
@@ -26,5 +23,5 @@ interface RulesBuilderInterface
 	public function string(): static;
 	public function url(): static;
 
-	public function build(): array;
+	public function build(): RuleInterface;
 }

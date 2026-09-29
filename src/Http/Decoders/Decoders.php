@@ -12,7 +12,6 @@ readonly class Decoders implements DecodersInterface
 	public function __construct(
 		protected array $decoders,
 	) {
-		$this->validate($this->decoders);
 	}
 
 	public function with(DecoderInterface $decoder): static
@@ -100,14 +99,5 @@ readonly class Decoders implements DecodersInterface
 	public function __invoke(): array
 	{
 		return array_values($this->decoders);
-	}
-
-	protected function validate(array $decoders): void
-	{
-		foreach ($decoders as $decoder) {
-			if (!$decoder instanceof DecoderInterface) {
-				throw new DecodersException('must provide decoder interface');
-			}
-		}
 	}
 }
