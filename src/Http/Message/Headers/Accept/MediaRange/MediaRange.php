@@ -5,9 +5,9 @@ namespace WordPressPluginFramework\Http\Message\Headers\Accept\MediaRange;
 use WordPressPluginFramework\{
 	Http\Message\Headers\Accept\MediaRange\Precedence\Precedence,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Http\Message\Headers\Parameters\Parameters,
 	Http\Message\Headers\Parameters\ParametersInterface,
 	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
 };
 
 readonly class MediaRange implements MediaRangeInterface
@@ -16,10 +16,11 @@ readonly class MediaRange implements MediaRangeInterface
 	protected string $subtype;
 
 	public function __construct(
+		protected PregInterface $preg,
 		string $type,
 		string $subtype,
-		protected ParametersInterface $parameters = new Parameters([]),
-		protected ?string $q = null,
+		protected ParametersInterface $parameters,
+		protected ?string $q,
 	) {
 		$this->validateType($type);
 		$this->type = $this->normalizeType($type);
@@ -37,7 +38,7 @@ readonly class MediaRange implements MediaRangeInterface
 
 	public function withType(string $type): static
 	{
-		return new static($type, $this->subtype, $this->parameters, $this->q);
+		return new static($this->preg, $type, $this->subtype, $this->parameters, $this->q);
 	}
 
 	public function subtype(): string
@@ -47,7 +48,7 @@ readonly class MediaRange implements MediaRangeInterface
 
 	public function withSubtype(string $subtype): static
 	{
-		return new static($this->type, $subtype, $this->parameters, $this->q);
+		return new static($this->preg, $this->type, $subtype, $this->parameters, $this->q);
 	}
 
 	public function parameters(): ParametersInterface
@@ -57,7 +58,7 @@ readonly class MediaRange implements MediaRangeInterface
 
 	public function withParameters(ParametersInterface $parameters): static
 	{
-		return new static($this->type, $this->subtype, $parameters, $this->q);
+		return new static($this->preg, $this->type, $this->subtype, $parameters, $this->q);
 	}
 
 	public function q(): ?string
@@ -67,12 +68,12 @@ readonly class MediaRange implements MediaRangeInterface
 
 	public function withQ(string $q): static
 	{
-		return new static($this->type, $this->subtype, $this->parameters, $q);
+		return new static($this->preg, $this->type, $this->subtype, $this->parameters, $q);
 	}
 
 	public function withoutQ(): static
 	{
-		return new static($this->type, $this->subtype, $this->parameters, null);
+		return new static($this->preg, $this->type, $this->subtype, $this->parameters, null);
 	}
 
 	public function __tostring(): string
@@ -112,14 +113,16 @@ readonly class MediaRange implements MediaRangeInterface
 
 	protected function validateType(string $type): void
 	{
-		if (!preg_match('@\A' . Rfc9110::TYPE . '\z@', $type)) {
+		$match = $this->preg->match('@\A' . Rfc9110::TYPE . '\z@', $type);
+		if ($match === null) {
 			throw new MediaRangeException('invalid type');
 		}
 	}
 
 	protected function validateSubtype(string $subtype): void
 	{
-		if (!preg_match('@\A' . Rfc9110::SUBTYPE . '\z@', $subtype)) {
+		$match = $this->preg->match('@\A' . Rfc9110::SUBTYPE . '\z@', $subtype);
+		if ($match === null) {
 			throw new MediaRangeException('invalid subtype');
 		}
 	}
@@ -130,7 +133,8 @@ readonly class MediaRange implements MediaRangeInterface
 			return;
 		}
 
-		if (!preg_match('@\A' . Rfc9110::QVALUE . '\z@', $q)) {
+		$match = $this->preg->match('@\A' . Rfc9110::QVALUE . '\z@', $q);
+		if ($match === null) {
 			throw new MediaRangeException('invalid q');
 		}
 	}

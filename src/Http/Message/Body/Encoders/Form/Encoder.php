@@ -7,13 +7,14 @@ use WordPressPluginFramework\{
 	Http\Message\Body\Encoders\EncoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
+	Preg\Preg,
 };
 use stdClass;
 
 readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType('application', 'x-www-form-urlencoded'),
+		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'x-www-form-urlencoded'),
 	) {
 		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');

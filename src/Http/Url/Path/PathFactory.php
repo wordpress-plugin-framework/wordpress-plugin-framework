@@ -5,39 +5,33 @@ namespace WordPressPluginFramework\Http\Url\Path;
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc3986,
 	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
 };
 
 readonly class PathFactory implements PathFactoryInterface
 {
+	public function __construct(
+		protected PregInterface $preg,
+	) {
+	}
+
 	public function create(string $path): PathInterface
 	{
-		if (preg_match('@\A' . Rfc9110::PATH_ABEMPTY . '\z@', $path) !== 1) {
+		$match = $this->preg->match('@\A' . Rfc9110::PATH_ABEMPTY . '\z@', $path);
+		if ($match === null) {
 			throw new PathFactoryException('invalid path');
-		}
-
-		if (preg_match_all('@/' . Rfc9110::SEGMENT . '@', $path, $matches, PREG_SET_ORDER) === false) {
-			throw new PathFactoryException('path is not splittable');
 		}
 
 		$segments = [];
 
+		$matches = $this->preg->matchAll('@/' . Rfc9110::SEGMENT . '@', $match['path_abempty'], PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 		foreach ($matches as $match) {
-			$segments[] = $this->decodeSegment($match['segment']);
+			$segments[] = $this->preg->replaceCallback('@' . Rfc3986::PCT_ENCODED . '@', fn($match) => rawurldecode($match[0]), $match['segment']);
 		}
 
 		$segments = $this->removeDotSegments($segments);
 
-		return new Path($segments);
-	}
-
-	protected function decodeSegment(string $segment): string
-	{
-		$decoded = preg_replace_callback('@' . Rfc3986::PCT_ENCODED . '@', fn($match) => rawurldecode($match[0]), $segment);
-		if ($decoded === null) {
-			throw new PathFactoryException('segment is not decodable');
-		}
-
-		return $decoded;
+		return new Path($this->preg, $segments);
 	}
 
 	protected function removeDotSegments(array $segments): array

@@ -3,14 +3,21 @@
 namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
 use ArrayIterator;
-use WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\{
+	Http\Abnf\Rfc5234,
+	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
+};
 use Traversable;
 
 readonly class Parameters implements ParametersInterface
 {
+	protected const UNQUOTED_PAIR = '(?!' . Rfc9110::QDTEXT . ')' . Rfc5234::OCTET;
+
 	protected array $parameters;
 
 	public function __construct(
+		protected PregInterface $preg,
 		array $parameters,
 	) {
 		$this->validate($parameters);
@@ -32,7 +39,7 @@ readonly class Parameters implements ParametersInterface
 		$parameters = $this->parameters;
 		$parameters[strtolower($name)] = $value;
 
-		return new static($parameters);
+		return new static($this->preg, $parameters);
 	}
 
 	public function without(string $name): static
@@ -40,7 +47,7 @@ readonly class Parameters implements ParametersInterface
 		$parameters = $this->parameters;
 		unset($parameters[strtolower($name)]);
 
-		return new static($parameters);
+		return new static($this->preg, $parameters);
 	}
 
 	public function isEmpty(): bool
@@ -82,7 +89,8 @@ readonly class Parameters implements ParametersInterface
 	protected function validate(array $parameters): void
 	{
 		foreach ($parameters as $name => $value) {
-			if (preg_match('@\A' . Rfc9110::PARAMETER_NAME . '\z@', $name) !== 1) {
+			$match = $this->preg->match('@\A' . Rfc9110::PARAMETER_NAME . '\z@', $name);
+			if ($match === null) {
 				throw new ParametersException("invalid parameter name \"{$name}\"");
 			}
 
@@ -90,7 +98,10 @@ readonly class Parameters implements ParametersInterface
 				throw new ParametersException("parameter value for \"{$name}\" must be a string");
 			}
 
-			if (preg_match('@\A' . Rfc9110::PARAMETER_VALUE . '\z@', $this->quote($value)) !== 1) {
+			$quoted = $this->quote($value);
+
+			$match = $this->preg->match('@\A' . Rfc9110::PARAMETER_VALUE . '\z@', $quoted);
+			if ($match === null) {
 				throw new ParametersException("invalid parameter value for \"{$name}\"");
 			}
 		}
@@ -103,10 +114,11 @@ readonly class Parameters implements ParametersInterface
 
 	protected function quote(string $value): string
 	{
-		if (preg_match('@\A' . Rfc9110::TOKEN . '\z@', $value)) {
+		$match = $this->preg->match('@\A' . Rfc9110::TOKEN . '\z@', $value);
+		if ($match !== null) {
 			return $value;
 		}
 
-		return '"' . preg_replace('@(?!' . Rfc9110::QDTEXT . ')(.)@s', '\\\\$1', $value) . '"';
+		return '"' . $this->preg->replaceCallback('@' . self::UNQUOTED_PAIR . '@',fn($match) => '\\' . $match[0], $value) . '"';
 	}
 }

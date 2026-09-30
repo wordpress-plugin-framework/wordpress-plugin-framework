@@ -2,18 +2,27 @@
 
 namespace WordPressPluginFramework\Http\Message\Headers\Vary;
 
-use WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\{
+	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
+};
 
 readonly class VaryFactory implements VaryFactoryInterface
 {
+	public function __construct(
+		protected PregInterface $preg,
+	) {
+	}
+
 	public function create(string $vary): VaryInterface
 	{
-		if (preg_match('@\A' . Rfc9110::VARY . '\z@J', $vary) !== 1) {
+		$match = $this->preg->match('@\A' . Rfc9110::VARY . '\z@J', $vary);
+		if ($match === null) {
 			throw new VaryFactoryException('invalid vary');
 		}
 
-		preg_match_all('@' . Rfc9110::FIELD_NAME . '@', $vary, $matches);
+		$matches = $this->preg->matchAll('@' . Rfc9110::FIELD_NAME . '@', $match['vary']);
 
-		return new Vary($matches['field_name']);
+		return new Vary($this->preg, $matches['field_name']);
 	}
 }

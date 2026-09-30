@@ -9,10 +9,16 @@ use WordPressPluginFramework\{
 	Http\Request\RequestInterface,
 	Http\Response\ResponseInterface,
 	Http\Responses\ResponsesInterface,
+	Preg\PregInterface,
 };
 
 readonly class Negotiator implements NegotiatorInterface
 {
+	public function __construct(
+		protected PregInterface $preg,
+	) {
+	}
+
 	public function negotiate(RequestInterface $request, ResponsesInterface $responses): ResponseInterface
 	{
 		$negotiatedResponses = $this->negotiateResponses($request, $responses);
@@ -53,7 +59,7 @@ readonly class Negotiator implements NegotiatorInterface
 
 	protected function withVary(ResponseInterface $response): ResponseInterface
 	{
-		$vary = $response->headers()->vary() ?? new Vary();
+		$vary = $response->headers()->vary() ?? new Vary($this->preg, []);
 		$vary = $vary->with('accept');
 
 		return $response->withHeaders($response->headers()->withVary($vary));

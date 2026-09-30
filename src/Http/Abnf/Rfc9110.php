@@ -26,8 +26,8 @@ readonly class Rfc9110
 	public const PARAMETERS = '(?<parameters>(?:' . self::OWS . ';' . self::OWS . '(?:' . self::PARAMETER . ')?)*)';
 	public const WEIGHT = self::OWS . ';' . self::OWS . '(?i:q=)(?<q>' . self::QVALUE . ')';
 	public const MEDIA_RANGE = '(?<media_range>' . self::TYPE . '/' . self::SUBTYPE . self::PARAMETERS . ')';
-	public const VARY = '(?:' . self::FIELD_NAME . ')?(?:' . self::OWS . ',' . self::OWS . '(?:' . self::FIELD_NAME . ')?)*';
-	public const ACCEPT = '(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?(?:' . self::OWS . ',' . self::OWS . '(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?)*';
+	public const VARY = '(?<vary>(?:' . self::FIELD_NAME . ')?(?:' . self::OWS . ',' . self::OWS . '(?:' . self::FIELD_NAME . ')?)*)';
+	public const ACCEPT = '(?<accept>(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?(?:' . self::OWS . ',' . self::OWS . '(?:(?:' . self::MEDIA_RANGE . '(?:' . self::WEIGHT . ')?))?)*)';
 	public const AUTHORITY = Rfc3986::AUTHORITY;
 	public const URI_HOST = Rfc3986::HOST;
 	public const PORT = Rfc3986::PORT;

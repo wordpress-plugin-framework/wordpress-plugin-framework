@@ -3,25 +3,26 @@
 namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
-	Http\Abnf\Rfc3986,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathInterface,
+	Http\Url\Port\PortInterface,
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,
+	Preg\PregInterface,
 };
 
 readonly class Url implements UrlInterface
 {
-	protected ?string $port;
+	protected ?PortInterface $port;
 
 	public function __construct(
+		protected PregInterface $preg,
 		protected Scheme $scheme,
 		protected HostInterface $host,
-		?string $port,
+		?PortInterface $port,
 		protected PathInterface $path,
-		protected ?QueryInterface $query = null,
+		protected ?QueryInterface $query,
 	) {
-		$this->validatePort($port);
 		$this->port = $this->normalizePort($port);
 	}
 
@@ -32,7 +33,7 @@ readonly class Url implements UrlInterface
 
 	public function withScheme(Scheme $scheme): static
 	{
-		return new static($scheme, $this->host, $this->port, $this->path, $this->query);
+		return new static($this->preg, $scheme, $this->host, $this->port, $this->path, $this->query);
 	}
 
 	public function host(): HostInterface
@@ -42,22 +43,22 @@ readonly class Url implements UrlInterface
 
 	public function withHost(HostInterface $host): static
 	{
-		return new static($this->scheme, $host, $this->port, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $host, $this->port, $this->path, $this->query);
 	}
 
-	public function port(): ?string
+	public function port(): ?PortInterface
 	{
 		return $this->port;
 	}
 
-	public function withPort(string $port): static
+	public function withPort(PortInterface $port): static
 	{
-		return new static($this->scheme, $this->host, $port, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, $port, $this->path, $this->query);
 	}
 
 	public function withoutPort(): static
 	{
-		return new static($this->scheme, $this->host, null, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, null, $this->path, $this->query);
 	}
 
 	public function path(): PathInterface
@@ -67,7 +68,7 @@ readonly class Url implements UrlInterface
 
 	public function withPath(PathInterface $path): static
 	{
-		return new static($this->scheme, $this->host, $this->port, $path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $path, $this->query);
 	}
 
 	public function query(): ?QueryInterface
@@ -77,12 +78,12 @@ readonly class Url implements UrlInterface
 
 	public function withQuery(QueryInterface $query): static
 	{
-		return new static($this->scheme, $this->host, $this->port, $this->path, $query);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, $query);
 	}
 
 	public function withoutQuery(): static
 	{
-		return new static($this->scheme, $this->host, $this->port, $this->path, null);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, null);
 	}
 
 	public function __toString(): string
@@ -102,29 +103,12 @@ readonly class Url implements UrlInterface
 		return $url;
 	}
 
-	protected function validatePort(?string $port): void
-	{
-		if ($port === null) {
-			return;
-		}
-
-		if (!preg_match('@\A' . Rfc3986::PORT . '\z@', $port)) {
-			throw new UrlException('invalid port');
-		}
-	}
-
-	protected function normalizePort(?string $port): ?string
+	protected function normalizePort(?PortInterface $port): ?PortInterface
 	{
 		if ($port === null) {
 			return null;
 		}
 
-		if ($port === '') {
-			return null;
-		}
-
-		$value = (int) $port;
-
-		return $this->scheme->port() === $value ? null : $port;
+		return $this->scheme->port() === $port() ? null : $port;
 	}
 }

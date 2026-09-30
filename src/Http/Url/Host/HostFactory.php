@@ -5,38 +5,25 @@ namespace WordPressPluginFramework\Http\Url\Host;
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc3986,
 	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
 };
 
 readonly class HostFactory implements HostFactoryInterface
 {
+	public function __construct(
+		protected PregInterface $preg,
+	) {
+	}
+
 	public function create(string $host): HostInterface
 	{
-		$this->validate($host);
-
-		$decoded = $this->decode($host);
-
-		return new Host($decoded);
-	}
-
-	protected function validate(string $host): void
-	{
-		$matched = preg_match('@\A' . Rfc9110::URI_HOST . '\z@', $host);
-		if ($matched === false) {
-			throw new HostFactoryException('host is not checkable');
-		}
-
-		if ($matched !== 1) {
+		$match = $this->preg->match('@\A' . Rfc9110::URI_HOST . '\z@', $host);
+		if ($match === null) {
 			throw new HostFactoryException('invalid host');
 		}
-	}
 
-	protected function decode(string $host): string
-	{
-		$decoded = preg_replace_callback('@' . Rfc3986::PCT_ENCODED . '@', fn($match) => rawurldecode($match[0]), $host);
-		if ($decoded === null) {
-			throw new HostFactoryException('host is not decodable');
-		}
+		$host = $this->preg->replaceCallback('@' . Rfc3986::PCT_ENCODED . '@', fn($match) => rawurldecode($match[0]), $match['host']);
 
-		return $decoded;
+		return new Host($this->preg, $host);
 	}
 }

@@ -5,6 +5,7 @@ namespace WordPressPluginFramework\Http\Url;
 use WordPressPluginFramework\{
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathInterface,
+	Http\Url\Port\PortInterface,
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,
 };
@@ -18,8 +19,8 @@ interface UrlInterface extends Stringable
 	public function host(): HostInterface;
 	public function withHost(HostInterface $host): static;
 
-	public function port(): ?string;
-	public function withPort(string $port): static;
+	public function port(): ?PortInterface;
+	public function withPort(PortInterface $port): static;
 	public function withoutPort(): static;
 
 	public function path(): PathInterface;

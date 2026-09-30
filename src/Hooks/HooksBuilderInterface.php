@@ -8,6 +8,8 @@ interface HooksBuilderInterface
 {
 	public function withHook(HookInterface $hook): static;
 
+	public function group(Closure $closure, ?Closure $pipelineBuilderClosure = null): static;
+
 	public function action(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static;
 	public function filter(string $name, Closure $closure, int $priority = 10, ?Closure $middlewaresBuilderClosure = null): static;
 

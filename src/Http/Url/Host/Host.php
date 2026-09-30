@@ -5,6 +5,7 @@ namespace WordPressPluginFramework\Http\Url\Host;
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc3629,
 	Http\Abnf\Rfc3986,
+	Preg\PregInterface,
 };
 
 readonly class Host implements HostInterface
@@ -13,8 +14,10 @@ readonly class Host implements HostInterface
 
 	protected string $host;
 
-	public function __construct(string $host)
-	{
+	public function __construct(
+		protected PregInterface $preg,
+		string $host,
+	) {
 		$this->validate($host);
 		$this->host = $this->normalize($host);
 	}
@@ -31,12 +34,8 @@ readonly class Host implements HostInterface
 
 	protected function validate(string $host): void
 	{
-		$matched = preg_match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . self::PCT_DECODED . '|' . Rfc3986::SUB_DELIMS . ')*)\z@', $host);
-		if ($matched === false) {
-			throw new HostException('host is not checkable');
-		}
-
-		if ($matched !== 1) {
+		$match = $this->preg->match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . self::PCT_DECODED . '|' . Rfc3986::SUB_DELIMS . ')*)\z@', $host);
+		if ($match === null) {
 			throw new HostException('invalid host');
 		}
 	}
@@ -48,11 +47,6 @@ readonly class Host implements HostInterface
 
 	protected function encode(string $host): string
 	{
-		$encoded = preg_replace_callback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $host);
-		if ($encoded === null) {
-			throw new HostException('host is not encodable');
-		}
-
-		return $encoded;
+		return $this->preg->replaceCallback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $host);
 	}
 }

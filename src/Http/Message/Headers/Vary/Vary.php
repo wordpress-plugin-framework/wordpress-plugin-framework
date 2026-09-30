@@ -3,7 +3,10 @@
 namespace WordPressPluginFramework\Http\Message\Headers\Vary;
 
 use ArrayIterator;
-use WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\{
+	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
+};
 use Traversable;
 
 readonly class Vary implements VaryInterface
@@ -11,6 +14,7 @@ readonly class Vary implements VaryInterface
 	protected array $fieldNames;
 
 	public function __construct(
+		protected PregInterface $preg,
 		array $fieldNames,
 	) {
 		$this->validate($fieldNames);
@@ -29,7 +33,7 @@ readonly class Vary implements VaryInterface
 		$fieldNames = $this->fieldNames;
 		$fieldNames[$fieldName] = $fieldName;
 
-		return new static($fieldNames);
+		return new static($this->preg, $fieldNames);
 	}
 
 	public function without(string $fieldName): static
@@ -39,7 +43,7 @@ readonly class Vary implements VaryInterface
 		$fieldNames = $this->fieldNames;
 		unset($fieldNames[$fieldName]);
 
-		return new static($fieldNames);
+		return new static($this->preg, $fieldNames);
 	}
 
 	public function isEmpty(): bool
@@ -81,7 +85,8 @@ readonly class Vary implements VaryInterface
 				throw new VaryException('field name must be a string');
 			}
 
-			if (preg_match('@\A' . Rfc9110::FIELD_NAME . '\z@', $fieldName) !== 1) {
+			$match = $this->preg->match('@\A' . Rfc9110::FIELD_NAME . '\z@', $fieldName);
+			if ($match === null) {
 				throw new VaryException("invalid field name \"{$fieldName}\"");
 			}
 		}

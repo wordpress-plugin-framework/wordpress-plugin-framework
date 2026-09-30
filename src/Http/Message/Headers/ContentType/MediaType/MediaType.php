@@ -6,6 +6,8 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc9110,
 	Http\Message\Headers\Parameters\Parameters,
 	Http\Message\Headers\Parameters\ParametersInterface,
+	Preg\Preg,
+	Preg\PregInterface,
 };
 
 readonly class MediaType implements MediaTypeInterface
@@ -14,9 +16,10 @@ readonly class MediaType implements MediaTypeInterface
 	protected string $subtype;
 
 	public function __construct(
+		protected PregInterface $preg,
 		string $type,
 		string $subtype,
-		protected ParametersInterface $parameters = new Parameters([]),
+		protected ParametersInterface $parameters,
 	) {
 		$this->validateType($type);
 		$this->type = $this->normalizeType($type);
@@ -32,7 +35,7 @@ readonly class MediaType implements MediaTypeInterface
 
 	public function withType(string $type): static
 	{
-		return new static($type, $this->subtype, $this->parameters);
+		return new static($this->preg, $type, $this->subtype, $this->parameters);
 	}
 
 	public function subtype(): string
@@ -42,7 +45,7 @@ readonly class MediaType implements MediaTypeInterface
 
 	public function withSubtype(string $subtype): static
 	{
-		return new static($this->type, $subtype, $this->parameters);
+		return new static($this->preg, $this->type, $subtype, $this->parameters);
 	}
 
 	public function parameters(): ParametersInterface
@@ -52,7 +55,7 @@ readonly class MediaType implements MediaTypeInterface
 
 	public function withParameters(ParametersInterface $parameters): static
 	{
-		return new static($this->type, $this->subtype, $parameters);
+		return new static($this->preg, $this->type, $this->subtype, $parameters);
 	}
 
 	public function __toString(): string
@@ -62,7 +65,8 @@ readonly class MediaType implements MediaTypeInterface
 
 	protected function validateType(string $type): void
 	{
-		if (!preg_match('@\A' . Rfc9110::TYPE . '\z@', $type)) {
+		$match = $this->preg->match('@\A' . Rfc9110::TYPE . '\z@', $type);
+		if ($match === null) {
 			throw new MediaTypeException('invalid type');
 		}
 
@@ -73,7 +77,8 @@ readonly class MediaType implements MediaTypeInterface
 
 	protected function validateSubtype(string $subtype): void
 	{
-		if (!preg_match('@\A' . Rfc9110::SUBTYPE . '\z@', $subtype)) {
+		$match = $this->preg->match('@\A' . Rfc9110::SUBTYPE . '\z@', $subtype);
+		if ($match === null) {
 			throw new MediaTypeException('invalid subtype');
 		}
 

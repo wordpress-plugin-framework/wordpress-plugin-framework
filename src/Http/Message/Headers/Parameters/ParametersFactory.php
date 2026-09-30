@@ -2,33 +2,42 @@
 
 namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
-use WordPressPluginFramework\Http\Abnf\Rfc9110;
+use WordPressPluginFramework\{
+	Http\Abnf\Rfc9110,
+	Preg\PregInterface,
+};
 
 readonly class ParametersFactory implements ParametersFactoryInterface
 {
+	public function __construct(
+		protected PregInterface $preg,
+	) {
+	}
+
 	public function create(string $parameters): ParametersInterface
 	{
-		if (preg_match('@\A' . Rfc9110::PARAMETERS . '\z@', $parameters) !== 1) {
+		$match = $this->preg->match('@\A' . Rfc9110::PARAMETERS . '\z@', $parameters);
+		if ($match === null) {
 			throw new ParametersFactoryException('invalid parameters');
 		}
 
-		preg_match_all('@' . Rfc9110::OWS . ';' . Rfc9110::OWS . Rfc9110::PARAMETER . '@', $parameters, $matches, PREG_SET_ORDER);
-
 		$parameters = [];
 
+		$matches = $this->preg->matchAll('@' . Rfc9110::OWS . ';' . Rfc9110::OWS . Rfc9110::PARAMETER . '@', $match['parameters'], PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 		foreach ($matches as $match) {
 			$parameters[$match['parameter_name']] = $this->unquote($match['parameter_value']);
 		}
 
-		return new Parameters($parameters);
+		return new Parameters($this->preg, $parameters);
 	}
 
 	protected function unquote(string $value): string
 	{
-		if (preg_match('@\A' . Rfc9110::TOKEN . '\z@', $value)) {
+		$match = $this->preg->match('@\A' . Rfc9110::TOKEN . '\z@', $value);
+		if ($match !== null) {
 			return $value;
 		}
 
-		return preg_replace('@\x5C(.)@s', '$1', substr($value, 1, -1));
+		return $this->preg->replaceCallback('@' . Rfc9110::QUOTED_PAIR . '@', fn($match) => substr($match[0], 1), substr($value, 1, -1));
 	}
 }

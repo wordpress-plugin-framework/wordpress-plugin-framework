@@ -8,13 +8,14 @@ use WordPressPluginFramework\{
 	Http\Message\Body\Decoders\DecoderInterface,
 	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
+	Preg\Preg,
 };
 use Throwable;
 
 readonly class Decoder implements DecoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType('application', 'json'),
+		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'json'),
 	) {
 		if (!$this->decodesContentType($contentType)) {
 			throw new DecoderException('does not decode this media type');

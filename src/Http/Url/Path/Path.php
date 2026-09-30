@@ -6,6 +6,7 @@ use ArrayIterator;
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc3986,
 	Http\Abnf\Rfc5234,
+	Preg\PregInterface,
 };
 use Traversable;
 
@@ -15,38 +16,78 @@ readonly class Path implements PathInterface
 
 	protected array $segments;
 
-	public function __construct(array $segments)
-	{
+	public function __construct(
+		protected PregInterface $preg,
+		array $segments,
+	) {
 		$this->validate($segments);
-		$this->segments = array_values($segments);
+		$this->segments = $this->normalize($segments);
 	}
 
-	public function hasSegment(string $segment): bool
+	public function has(int $index): bool
 	{
-		return in_array($segment, $this->segments, true);
+		return isset($this->segments[$index]);
 	}
 
-	public function withSegment(string $segment): static
+	public function get(int $index): ?string
 	{
-		$segments = $this->segments;
-		$segments[] = $segment;
-
-		return new static($segments);
-	}
-
-	public function withoutSegment(string $segment): static
-	{
-		$segments = [];
-
-		foreach ($this->segments as $kept) {
-			if ($kept === $segment) {
-				continue;
-			}
-
-			$segments[] = $kept;
+		if (!$this->has($index)) {
+			return null;
 		}
 
-		return new static($segments);
+		return $this->segments[$index];
+	}
+
+	public function first(): ?string
+	{
+		return $this->get(0);
+	}
+
+	public function last(): ?string
+	{
+		$index = $this->count() - 1;
+
+		return $this->get($index);
+	}
+
+	public function with(int $index, string $segment): static
+	{
+		$segments = $this->segments;
+		$segments[$index] = $segment;
+
+		return new static($this->preg, $segments);
+	}
+
+	public function without(int $index): static
+	{
+		$segments = $this->segments;
+		unset($segments[$index]);
+
+		return new static($this->preg, $segments);
+	}
+
+	public function withFirst(string $segment): static
+	{
+		return $this->with(0, $segment);
+	}
+
+	public function withoutFirst(): static
+	{
+		return $this->without(0);
+	}
+
+	public function withLast(string $segment): static
+	{
+		$index = $this->count() - 1;
+
+		return $this->with($index, $segment);
+	}
+
+	public function withoutLast(): static
+	{
+		$index = $this->count() - 1;
+
+		return $this->without($index);
 	}
 
 	public function isEmpty(): bool
@@ -79,7 +120,7 @@ readonly class Path implements PathInterface
 		$path = '';
 
 		foreach ($this->segments as $segment) {
-			$path .= '/' . $this->encodeSegment($segment);
+			$path .= '/' . $this->preg->replaceCallback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $segment);
 		}
 
 		return $path;
@@ -101,13 +142,8 @@ readonly class Path implements PathInterface
 		}
 	}
 
-	protected function encodeSegment(string $segment): string
+	protected function normalize(array $segments): array
 	{
-		$encoded = preg_replace_callback('@' . self::PCT_DECODED . '@', fn($match) => rawurlencode($match[0]), $segment);
-		if ($encoded === null) {
-			throw new PathException('segment is not encodable');
-		}
-
-		return $encoded;
+		return array_values($segments);
 	}
 }

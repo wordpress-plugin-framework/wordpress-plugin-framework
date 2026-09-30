@@ -10,10 +10,20 @@ interface PathInterface extends IteratorAggregate, Countable, Stringable
 {
 	public function __invoke(): array;
 
-	public function hasSegment(string $segment): bool;
+	public function has(int $index): bool;
+	public function get(int $index): ?string;
 
-	public function withSegment(string $segment): static;
-	public function withoutSegment(string $segment): static;
+	public function first(): ?string;
+	public function last(): ?string;
+
+	public function with(int $index, string $segment): static;
+	public function without(int $index): static;
+
+	public function withFirst(string $segment): static;
+	public function withoutFirst(): static;
+
+	public function withLast(string $segment): static;
+	public function withoutLast(): static;
 
 	public function isEmpty(): bool;
 	public function isNotEmpty(): bool;
