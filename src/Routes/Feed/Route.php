@@ -5,29 +5,25 @@ namespace WordPressPluginFramework\Routes\Feed;
 use Closure;
 use WordPressPluginFramework\{
 	Routes\RouteInterface,
-	Http\Responder\ResponderInterface,
-	Http\Responder\ResponderFactoryInterface,
+	Emitter\EmitterInterface,
 	Http\Request\RequestInterface,
-	Http\Response\ResponseInterface,
-	Pipeline\PipelineInterface,
-	Pipeline\PipelineFactoryInterface,
+	Responder\ResponderInterface,
+	Exceptions\Handler\HandlerInterface,
+	Pipeline\PipelineBuilderInterface,
 };
-
+use Throwable;
 
 readonly class Route implements RouteInterface
 {
-	protected const string MEDIA_TYPE = 'application/xml';
-
-	protected ResponderInterface $responder;
-	protected PipelineInterface $pipeline;
-
 	public function __construct(
 		protected RequestInterface $request,
-		protected ResponderFactoryInterface $responderFactory,
-		protected PipelineFactoryInterface $pipelineFactory,
+		protected ResponderInterface $responder,
+		protected HandlerInterface $handler,
+		protected EmitterInterface $emitter,
+		protected PipelineBuilderInterface $pipelineBuilder,
 		protected string $name,
 		protected Closure $closure,
-		protected ?Closure $middlewaresBuilderClosure = null,
+		protected ?Closure $pipelineBuilderClosure = null,
 	) {
 	}
 
@@ -61,48 +57,24 @@ readonly class Route implements RouteInterface
 
 	protected function callback(): void
 	{
-		$pipeline = $this->pipeline();
-		$responder = $this->responder();
+		try {
+			$pipeline = $this->pipelineBuilder()->build();
 
-		$response = $responder->respond(
-			$this->request,
-			$pipeline(($this->closure)(...)),
-		);
+			$response = $this->responder->respond(
+				$this->request,
+				$pipeline($this->closure),
+			);
+		} catch (Throwable $throwable) {
+			$response = $this->handler->handle($this->request, $throwable);
+		}
 
-		$this->statusCode($response);
-		$this->headers($response);
-		$this->body($response);
+		$this->emitter->emit($response);
 
 		exit();
 	}
 
-	protected function pipeline(): PipelineInterface
+	protected function pipelineBuilder(): PipelineBuilderInterface
 	{
-		return $this->pipeline ??= $this->pipelineFactory->create($this->request, $this->middlewaresBuilderClosure);
-	}
-
-	protected function responder(): ResponderInterface
-	{
-		return $this->responder ??= $this->responderFactory->create(self::MEDIA_TYPE);
-	}
-
-	protected function statusCode(ResponseInterface $response): void
-	{
-		http_response_code(
-			$response->statusCode(),
-		);
-	}
-
-	protected function headers(ResponseInterface $response): void
-	{
-		$headers = $response->headers();
-		foreach ($headers as $name => $value) {
-			header("{$name}: {$value}");
-		}
-	}
-
-	protected function body(ResponseInterface $response): void
-	{
-		echo (string) $response->body();
+		return $this->pipelineBuilderClosure === null ? $this->pipelineBuilder : ($this->pipelineBuilderClosure)($this->pipelineBuilder);
 	}
 }

@@ -16,7 +16,7 @@ readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
 		protected RendererInterface $renderer,
-		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'text', 'html'),
+		protected MediaTypeInterface $contentType,
 	) {
 		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
