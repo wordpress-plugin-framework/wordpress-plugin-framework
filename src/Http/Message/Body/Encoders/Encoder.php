@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Message\Body\Encoders;
 
 use WordPressPluginFramework\{
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Preg\Preg,
 };
 
 readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'octet-stream'),
+		protected MediaTypeInterface $contentType,
 	) {
 		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');

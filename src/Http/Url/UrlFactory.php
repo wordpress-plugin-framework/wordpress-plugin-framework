@@ -6,12 +6,12 @@ namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
 	Http\Abnf\Rfc3986,
+	Http\Abnf\Rfc5234,
 	Http\Abnf\Rfc9110,
 	Http\Url\Host\HostFactoryInterface,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathFactoryInterface,
 	Http\Url\Path\PathInterface,
-	Http\Url\PercentEncoder\PercentEncoderInterface,
 	Http\Url\Port\PortFactoryInterface,
 	Http\Url\Port\PortInterface,
 	Http\Url\Query\QueryFactoryInterface,
@@ -24,7 +24,6 @@ readonly class UrlFactory implements UrlFactoryInterface
 {
 	public function __construct(
 		protected PregInterface $preg,
-		protected PercentEncoderInterface $percentEncoder,
 		protected HostFactoryInterface $hostFactory,
 		protected PortFactoryInterface $portFactory,
 		protected PathFactoryInterface $pathFactory,
@@ -68,10 +67,6 @@ readonly class UrlFactory implements UrlFactoryInterface
 
 	protected function createHost(string $host): HostInterface
 	{
-		if ($host === '') {
-			throw new UrlFactoryException('missing scheme');
-		}
-
 		return $this->hostFactory->create($host);
 	}
 
@@ -89,7 +84,7 @@ readonly class UrlFactory implements UrlFactoryInterface
 
 	protected function createPath(string $path): PathInterface
 	{
-		$path = $this->percentEncoder->encodePath($path);
+		$path = $this->preg->replaceCallback('@(?!/|' . Rfc3986::PCHAR . ')' . Rfc5234::OCTET . '@', fn($match) => rawurlencode($match[0]), $path);
 
 		return $this->pathFactory->create($path);
 	}
@@ -99,6 +94,8 @@ readonly class UrlFactory implements UrlFactoryInterface
 		if ($query === null) {
 			return null;
 		}
+
+		$query = $this->preg->replaceCallback('@(?!' . Rfc3986::PCHAR . '|/|\?)' . Rfc5234::OCTET . '@', fn($match) => rawurlencode($match[0]), $query);
 
 		return $this->queryFactory->createFromEncoded($query);
 	}

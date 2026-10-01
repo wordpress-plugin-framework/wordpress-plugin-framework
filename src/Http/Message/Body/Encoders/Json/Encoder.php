@@ -8,9 +8,7 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc6838,
 	Http\Message\Body\Encoders\EncoderException,
 	Http\Message\Body\Encoders\EncoderInterface,
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Preg\Preg,
 };
 use stdClass;
 use Throwable;
@@ -18,7 +16,7 @@ use Throwable;
 readonly class Encoder implements EncoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'json'),
+		protected MediaTypeInterface $contentType,
 	) {
 		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');

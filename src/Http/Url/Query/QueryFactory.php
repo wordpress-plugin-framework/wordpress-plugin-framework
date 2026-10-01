@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Url\Query;
 
 use WordPressPluginFramework\{
+	Http\Abnf\Rfc9110,
 	Http\Accessor\AccessorInterface,
 	Http\Normalizers\NormalizersInterface,
 	Http\Url\Query\Decoders\DecodersInterface,
 	Http\Url\Query\Encoders\EncodersInterface,
+	Preg\PregInterface,
 };
 
 readonly class QueryFactory implements QueryFactoryInterface
 {
 	public function __construct(
+		protected PregInterface $preg,
 		protected AccessorInterface $accessor,
 		protected DecodersInterface $decoders,
 		protected EncodersInterface $encoders,
@@ -46,11 +49,16 @@ readonly class QueryFactory implements QueryFactoryInterface
 
 	public function createFromEncoded(string $query, bool $squareBrackets = true): QueryInterface
 	{
+		$match = $this->preg->match('@\A' . Rfc9110::QUERY . '\z@', $query);
+		if ($match === null) {
+			throw new QueryFactoryException('invalid query');
+		}
+
 		$decoder = $this->decoders
 			->filter(fn($decoder) => $decoder->squareBrackets() === $squareBrackets)
 			->first();
 
-		$decodedQuery = $decoder->decode($query);
+		$decodedQuery = $decoder->decode($match['query']);
 
 		return $this->create($decodedQuery, $squareBrackets);
 	}

@@ -36,7 +36,11 @@ readonly class Host implements HostInterface
 
 	protected function validate(string $host): void
 	{
-		$match = $this->preg->match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . self::PCT_DECODED . '|' . Rfc3986::SUB_DELIMS . ')*)\z@', $host);
+		if ($host === '') {
+			throw new HostException('empty host identifier');
+		}
+
+		$match =$this->preg->match('@\A(?:' . Rfc3986::IP_LITERAL . '|' . Rfc3986::IPV4ADDRESS . '|(?:' . Rfc3986::UNRESERVED . '|' . self::PCT_DECODED . '|' . Rfc3986::SUB_DELIMS . ')*)\z@', $host);
 		if ($match === null) {
 			throw new HostException('invalid host');
 		}

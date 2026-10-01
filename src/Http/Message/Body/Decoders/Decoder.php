@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Message\Body\Decoders;
 
 use WordPressPluginFramework\{
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Preg\Preg,
 };
 
 readonly class Decoder implements DecoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'octet-stream'),
+		protected MediaTypeInterface $contentType,
 	) {
 		if (!$this->decodesContentType($contentType)) {
 			throw new DecoderException('does not decode this media type');

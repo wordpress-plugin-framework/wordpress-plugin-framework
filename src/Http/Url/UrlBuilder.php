@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
-	Http\Url\Port\Port,
+	Http\Abnf\Rfc3986,
+	Http\Abnf\Rfc5234,
+	Http\Url\Host\HostFactoryInterface,
+	Http\Url\Host\HostInterface,
+	Http\Url\Path\PathFactoryInterface,
+	Http\Url\Path\PathInterface,
+	Http\Url\Port\PortFactoryInterface,
+	Http\Url\Port\PortInterface,
 	Http\Url\Query\QueryFactoryInterface,
 	Http\Url\Query\QueryInterface,
 	Http\Url\Scheme\Scheme,
@@ -14,42 +21,51 @@ use WordPressPluginFramework\{
 
 readonly class UrlBuilder implements UrlBuilderInterface
 {
+	protected PathInterface $path;
+
 	public function __construct(
-		protected QueryFactoryInterface $queryFactory,
 		protected PregInterface $preg,
+		protected HostFactoryInterface $hostFactory,
+		protected PortFactoryInterface $portFactory,
+		protected PathFactoryInterface $pathFactory,
+		protected QueryFactoryInterface $queryFactory,
 		protected ?Scheme $scheme = null,
-		protected string $host = '',
-		protected ?int $port = null,
-		protected string $path = '',
+		protected ?HostInterface $host = null,
+		protected ?PortInterface $port = null,
+		?PathInterface $path = null,
 		protected ?QueryInterface $query = null,
 	) {
+		$this->path = $path ?? $this->pathFactory->create('');
 	}
 
 	public function scheme(Scheme|string $scheme): static
 	{
 		$scheme = $this->createScheme($scheme);
-		return new static($this->queryFactory, $this->preg, $scheme, $this->host, $this->port, $this->path, $this->query);
+		return new static($this->preg, $this->hostFactory, $this->portFactory, $this->pathFactory, $this->queryFactory, $scheme, $this->host, $this->port, $this->path, $this->query);
 	}
 
-	public function host(string $host): static
+	public function host(HostInterface|string $host): static
 	{
-		return new static($this->queryFactory, $this->preg, $this->scheme, $host, $this->port, $this->path, $this->query);
+		$host = $this->createHost($host);
+		return new static($this->preg, $this->hostFactory, $this->portFactory, $this->pathFactory, $this->queryFactory, $this->scheme, $host, $this->port, $this->path, $this->query);
 	}
 
-	public function port(int $port): static
+	public function port(PortInterface|string $port): static
 	{
-		return new static($this->queryFactory, $this->preg, $this->scheme, $this->host, $port, $this->path, $this->query);
+		$port = $this->createPort($port);
+		return new static($this->preg, $this->hostFactory, $this->portFactory, $this->pathFactory, $this->queryFactory, $this->scheme, $this->host, $port, $this->path, $this->query);
 	}
 
-	public function path(string $path): static
+	public function path(PathInterface|string $path): static
 	{
-		return new static($this->queryFactory, $this->preg, $this->scheme, $this->host, $this->port, $path, $this->query);
+		$path = $this->createPath($path);
+		return new static($this->preg, $this->hostFactory, $this->portFactory, $this->pathFactory, $this->queryFactory, $this->scheme, $this->host, $this->port, $path, $this->query);
 	}
 
 	public function query(mixed $query): static
 	{
 		$query = $this->createQuery($query);
-		return new static($this->queryFactory, $this->preg, $this->scheme, $this->host, $this->port, $this->path, $query);
+		return new static($this->preg, $this->hostFactory, $this->portFactory, $this->pathFactory, $this->queryFactory, $this->scheme, $this->host, $this->port, $this->path, $query);
 	}
 
 	public function build(): UrlInterface
@@ -58,13 +74,11 @@ readonly class UrlBuilder implements UrlBuilderInterface
 			throw new UrlBuilderException('scheme is mandatory');
 		}
 
-		if ($this->host === '') {
+		if ($this->host === null) {
 			throw new UrlBuilderException('host is mandatory');
 		}
 
-		$port = $this->port === null ? null : new Port($this->port);
-
-		return new Url($this->preg, $this->scheme, $this->host, $port, $this->path, $this->query);
+		return new Url($this->preg, $this->scheme, $this->host, $this->port, $this->path, $this->query);
 	}
 
 	protected function createScheme(Scheme|string $scheme): Scheme
@@ -74,6 +88,39 @@ readonly class UrlBuilder implements UrlBuilderInterface
 		}
 
 		return Scheme::create($scheme);
+	}
+
+	protected function createHost(HostInterface|string $host): HostInterface
+	{
+		if ($host instanceof HostInterface) {
+			return $host;
+		}
+
+		return $this->hostFactory->create($host);
+	}
+
+	protected function createPort(PortInterface|string $port): ?PortInterface
+	{
+		if ($port instanceof PortInterface) {
+			return $port;
+		}
+
+		if ($port === '') {
+			return null;
+		}
+
+		return $this->portFactory->create($port);
+	}
+
+	protected function createPath(PathInterface|string $path): PathInterface
+	{
+		if ($path instanceof PathInterface) {
+			return $path;
+		}
+
+		$path = $this->preg->replaceCallback('@(?!/|' . Rfc3986::PCHAR . ')' . Rfc5234::OCTET . '@', fn($match) => rawurlencode($match[0]), $path);
+
+		return $this->pathFactory->create($path);
 	}
 
 	protected function createQuery(mixed $query): QueryInterface

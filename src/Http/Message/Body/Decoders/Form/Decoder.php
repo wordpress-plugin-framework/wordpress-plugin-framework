@@ -7,15 +7,13 @@ namespace WordPressPluginFramework\Http\Message\Body\Decoders\Form;
 use WordPressPluginFramework\{
 	Http\Message\Body\Decoders\DecoderException,
 	Http\Message\Body\Decoders\DecoderInterface,
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Preg\Preg,
 };
 
 readonly class Decoder implements DecoderInterface
 {
 	public function __construct(
-		protected MediaTypeInterface $contentType = new MediaType(new Preg(), 'application', 'x-www-form-urlencoded'),
+		protected MediaTypeInterface $contentType,
 	) {
 		if (!$this->decodesContentType($contentType)) {
 			throw new DecoderException('does not decode this media type');

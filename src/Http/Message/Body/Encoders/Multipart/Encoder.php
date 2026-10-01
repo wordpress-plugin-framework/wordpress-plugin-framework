@@ -9,9 +9,7 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc5234,
 	Http\Message\Body\Encoders\EncoderException,
 	Http\Message\Body\Encoders\EncoderInterface,
-	Http\Message\Headers\ContentType\MediaType\MediaType,
 	Http\Message\Headers\ContentType\MediaType\MediaTypeInterface,
-	Preg\Preg,
 };
 use stdClass;
 
@@ -20,7 +18,7 @@ readonly class Encoder implements EncoderInterface
 	protected MediaTypeInterface $contentType;
 
 	public function __construct(
-		MediaTypeInterface $contentType = new MediaType(new Preg(), 'multipart', 'form-data'),
+		MediaTypeInterface $contentType,
 	) {
 		if (!$this->encodesContentType($contentType)) {
 			throw new EncoderException('does not encode this media type');
