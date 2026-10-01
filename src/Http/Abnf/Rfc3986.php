@@ -32,6 +32,7 @@ readonly class Rfc3986
 	public const SEGMENT = '(?<segment>(?:' . self::PCHAR . ')*)';
 	public const PCHAR = '(?:' . self::UNRESERVED . '|' . self::PCT_ENCODED . '|' . self::SUB_DELIMS . '|:|\@)';
 	public const QUERY = '(?<query>(?:' . self::PCHAR . '|/|\?)*)';
+	public const FRAGMENT = '(?<fragment>(?:' . self::PCHAR . '|/|\?)*)';
 	public const PCT_ENCODED = '(?:%' . Rfc5234::HEXDIG . Rfc5234::HEXDIG . ')';
 	public const UNRESERVED = '(?:' . Rfc5234::ALPHA . '|' . Rfc5234::DIGIT . '|-|\.|_|~)';
 	public const SUB_DELIMS = '(?:!|\$|&|\'|\(|\)|\*|\+|,|;|=)';

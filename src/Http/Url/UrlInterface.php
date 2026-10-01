@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
+	Http\Url\Fragment\FragmentInterface,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathInterface,
 	Http\Url\Port\PortInterface,
@@ -31,4 +32,8 @@ interface UrlInterface extends Stringable
 	public function query(): ?QueryInterface;
 	public function withQuery(QueryInterface $query): static;
 	public function withoutQuery(): static;
+
+	public function fragment(): ?FragmentInterface;
+	public function withFragment(FragmentInterface $fragment): static;
+	public function withoutFragment(): static;
 }

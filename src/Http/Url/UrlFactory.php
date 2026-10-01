@@ -8,6 +8,8 @@ use WordPressPluginFramework\{
 	Http\Abnf\Rfc3986,
 	Http\Abnf\Rfc5234,
 	Http\Abnf\Rfc9110,
+	Http\Url\Fragment\FragmentFactoryInterface,
+	Http\Url\Fragment\FragmentInterface,
 	Http\Url\Host\HostFactoryInterface,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathFactoryInterface,
@@ -28,6 +30,7 @@ readonly class UrlFactory implements UrlFactoryInterface
 		protected PortFactoryInterface $portFactory,
 		protected PathFactoryInterface $pathFactory,
 		protected QueryFactoryInterface $queryFactory,
+		protected FragmentFactoryInterface $fragmentFactory,
 	) {
 	}
 
@@ -52,8 +55,9 @@ readonly class UrlFactory implements UrlFactoryInterface
 		$port = $this->createPort($match['authority']['port']);
 		$path = $this->createPath($match['path']);
 		$query = $this->createQuery($match['query']);
+		$fragment = $this->createFragment($match['fragment']);
 
-		return new Url($this->preg, $scheme, $host, $port, $path, $query);
+		return new Url($this->preg, $scheme, $host, $port, $path, $query, $fragment);
 	}
 
 	protected function createScheme(?string $scheme): Scheme
@@ -98,5 +102,16 @@ readonly class UrlFactory implements UrlFactoryInterface
 		$query = $this->preg->replaceCallback('@(?!' . Rfc3986::PCHAR . '|/|\?)' . Rfc5234::OCTET . '@', fn($match) => rawurlencode($match[0]), $query);
 
 		return $this->queryFactory->createFromEncoded($query);
+	}
+
+	protected function createFragment(?string $fragment): ?FragmentInterface
+	{
+		if ($fragment === null) {
+			return null;
+		}
+
+		$fragment = $this->preg->replaceCallback('@(?!' . Rfc3986::PCHAR . '|/|\?)' . Rfc5234::OCTET . '@', fn($match) => rawurlencode($match[0]), $fragment);
+
+		return $this->fragmentFactory->create($fragment);
 	}
 }

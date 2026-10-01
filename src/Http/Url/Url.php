@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
+	Http\Url\Fragment\FragmentInterface,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathInterface,
 	Http\Url\Port\PortInterface,
@@ -24,6 +25,7 @@ readonly class Url implements UrlInterface
 		?PortInterface $port,
 		protected PathInterface $path,
 		protected ?QueryInterface $query,
+		protected ?FragmentInterface $fragment,
 	) {
 		$this->port = $this->normalizePort($port);
 	}
@@ -35,7 +37,7 @@ readonly class Url implements UrlInterface
 
 	public function withScheme(Scheme $scheme): static
 	{
-		return new static($this->preg, $scheme, $this->host, $this->port, $this->path, $this->query);
+		return new static($this->preg, $scheme, $this->host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	public function host(): HostInterface
@@ -45,7 +47,7 @@ readonly class Url implements UrlInterface
 
 	public function withHost(HostInterface $host): static
 	{
-		return new static($this->preg, $this->scheme, $host, $this->port, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $host, $this->port, $this->path, $this->query, $this->fragment);
 	}
 
 	public function port(): ?PortInterface
@@ -55,12 +57,12 @@ readonly class Url implements UrlInterface
 
 	public function withPort(PortInterface $port): static
 	{
-		return new static($this->preg, $this->scheme, $this->host, $port, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, $port, $this->path, $this->query, $this->fragment);
 	}
 
 	public function withoutPort(): static
 	{
-		return new static($this->preg, $this->scheme, $this->host, null, $this->path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, null, $this->path, $this->query, $this->fragment);
 	}
 
 	public function path(): PathInterface
@@ -70,7 +72,7 @@ readonly class Url implements UrlInterface
 
 	public function withPath(PathInterface $path): static
 	{
-		return new static($this->preg, $this->scheme, $this->host, $this->port, $path, $this->query);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $path, $this->query, $this->fragment);
 	}
 
 	public function query(): ?QueryInterface
@@ -80,12 +82,27 @@ readonly class Url implements UrlInterface
 
 	public function withQuery(QueryInterface $query): static
 	{
-		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, $query);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, $query, $this->fragment);
 	}
 
 	public function withoutQuery(): static
 	{
-		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, null);
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, null, $this->fragment);
+	}
+
+	public function fragment(): ?FragmentInterface
+	{
+		return $this->fragment;
+	}
+
+	public function withFragment(FragmentInterface $fragment): static
+	{
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, $this->query, $fragment);
+	}
+
+	public function withoutFragment(): static
+	{
+		return new static($this->preg, $this->scheme, $this->host, $this->port, $this->path, $this->query, null);
 	}
 
 	public function __toString(): string
@@ -100,6 +117,10 @@ readonly class Url implements UrlInterface
 
 		if ($this->query !== null) {
 			$url .= "?{$this->query}";
+		}
+
+		if ($this->fragment !== null) {
+			$url .= "#{$this->fragment}";
 		}
 
 		return $url;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WordPressPluginFramework\Http\Url;
 
 use WordPressPluginFramework\{
+	Http\Url\Fragment\FragmentInterface,
 	Http\Url\Host\HostInterface,
 	Http\Url\Path\PathInterface,
 	Http\Url\Port\PortInterface,
@@ -18,6 +19,7 @@ interface UrlBuilderInterface
 	public function port(PortInterface|string $port): static;
 	public function path(PathInterface|string $path): static;
 	public function query(mixed $query): static;
+	public function fragment(FragmentInterface|string $fragment): static;
 
 	public function build(): UrlInterface;
 }
