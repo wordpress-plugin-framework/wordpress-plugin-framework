@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Message\Headers\Parameters;
 
 use ArrayIterator;
@@ -89,7 +91,7 @@ readonly class Parameters implements ParametersInterface
 	protected function validate(array $parameters): void
 	{
 		foreach ($parameters as $name => $value) {
-			$match = $this->preg->match('@\A' . Rfc9110::PARAMETER_NAME . '\z@', $name);
+			$match = $this->preg->match('@\A' . Rfc9110::PARAMETER_NAME . '\z@', (string) $name);
 			if ($match === null) {
 				throw new ParametersException("invalid parameter name \"{$name}\"");
 			}

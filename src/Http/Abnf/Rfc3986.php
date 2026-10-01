@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Abnf;
 
 readonly class Rfc3986

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Request;
 
 use WordPressPluginFramework\{
@@ -82,7 +84,7 @@ readonly class RequestFactory implements RequestFactoryInterface
 		$headers = [];
 
 		foreach ($this->server as $name => $value) {
-			if (!preg_match(self::HEADER, $name)) {
+			if (!preg_match(self::HEADER, (string) $name)) {
 				continue;
 			}
 

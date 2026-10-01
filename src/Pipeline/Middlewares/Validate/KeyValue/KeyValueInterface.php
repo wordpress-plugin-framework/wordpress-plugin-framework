@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\KeyValue;
 
 use WordPressPluginFramework\Http\Request\RequestInterface;

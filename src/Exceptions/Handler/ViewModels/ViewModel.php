@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Exceptions\Handler\ViewModels;
 
 use WordPressPluginFramework\{
@@ -22,7 +24,7 @@ readonly class ViewModel implements ViewModelInterface
     {
         return new static(
             $throwable->getMessage(),
-            $throwable->getCode(),
+            (string) $throwable->getCode(),
             self::getMessages($throwable),
             self::getDebug($throwable),
         );

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Database\Select;
 
 use WordPressPluginFramework\Database\DatabaseException;
@@ -18,7 +20,7 @@ readonly class Select implements SelectInterface
 
 	public function __invoke(QueryInterface $query): array
 	{
-		$this->query($query);
+		$this->query((string) $query);
 
 		return array_map(get_object_vars(...), $this->wpdb->last_result);
 	}

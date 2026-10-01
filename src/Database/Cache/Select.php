@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Database\Cache;
 
 use WordPressPluginFramework\Cache\CacheInterface;
@@ -17,6 +19,6 @@ readonly class Select implements SelectInterface
 
 	public function __invoke(Query\QueryInterface $query): array
 	{
-		return $this->cache->remember(hash_hmac('sha256', $query, $this->salt), fn() => ($this->select)($query));
+		return $this->cache->remember(hash_hmac('sha256', (string) $query, $this->salt), fn() => ($this->select)($query));
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Message\Headers;
 
 use ArrayIterator;
@@ -170,7 +172,7 @@ readonly class Headers implements HeadersInterface
 	protected function validate(array $headers): void
 	{
 		foreach ($headers as $name => $value) {
-			if (preg_match('/\A' . Rfc9110::FIELD_NAME . '\z/', $name) !== 1) {
+			if (preg_match('/\A' . Rfc9110::FIELD_NAME . '\z/', (string) $name) !== 1) {
 				throw new HeadersException("invalid field name \"{$name}\"");
 			}
 

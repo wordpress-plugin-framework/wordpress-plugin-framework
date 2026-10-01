@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hoo\WooCommercePluginFramework\Loggers;
 
 use WordPressPluginFramework\Logger\LoggerInterface;

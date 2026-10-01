@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Message\Headers\Accept;
 
 use ArrayIterator;
@@ -21,7 +23,7 @@ readonly class Accept implements AcceptInterface
 		foreach (Precedence::cases() as $precedence) {
 			foreach ($this->mediaRanges as $mediaRange) {
 				if ($precedence === $mediaRange->precedence($mediaType)) {
-					return $mediaRange->q() ?? '1';
+					return (float) ($mediaRange->q() ?? '1');
 				}
 			}
 		}

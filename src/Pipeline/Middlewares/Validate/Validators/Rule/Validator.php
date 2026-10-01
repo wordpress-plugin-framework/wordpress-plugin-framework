@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Pipeline\Middlewares\Validate\Validators\Rule;
 
 use Closure;
@@ -27,7 +29,7 @@ readonly class Validator implements ValidatorInterface
 			$closure($key, 'no content to validate');
 		} else {
 			foreach ($values as $key => $value) {
-				$this->rule->break($value, fn($message) => $closure($key, $message));
+				$this->rule->break($value, fn($message) => $closure((string) $key, $message));
 			}
 		}
 	}

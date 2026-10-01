@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Exceptions\NotAcceptable;
 
 use WordPressPluginFramework\Http;

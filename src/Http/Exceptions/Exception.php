@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Exceptions;
 
 use WordPressPluginFramework\Exceptions\Interfaces\HasStatusCodeInterface;

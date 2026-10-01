@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Client;
 
 use WordPressPluginFramework\{
@@ -21,7 +23,7 @@ readonly class Client implements ClientInterface
 	public function request(RequestInterface $request): ResponseInterface
 	{
 		$response = wp_safe_remote_request(
-			$request->url(),
+			(string) $request->url(),
 			[
 				'method' => $request->method()->value,
 				'headers' => $request->headers(),
@@ -34,7 +36,7 @@ readonly class Client implements ClientInterface
 		}
 
 		return $this->responseFactory->create(
-			wp_remote_retrieve_response_code($response),
+			(int) wp_remote_retrieve_response_code($response),
 			wp_remote_retrieve_headers($response)->getAll(),
 			wp_remote_retrieve_body($response)
 		);

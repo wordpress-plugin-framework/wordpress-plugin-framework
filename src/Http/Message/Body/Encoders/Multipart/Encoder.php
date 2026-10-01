@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Http\Message\Body\Encoders\Multipart;
 
 use WordPressPluginFramework\{
@@ -73,11 +75,11 @@ readonly class Encoder implements EncoderInterface
 		}
 
 		foreach ($body as $name => $value) {
-			if (preg_match('/\A(?:(?!' . Rfc5234::SP . '|\.|\[|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', $name) !== 1) {
+			if (preg_match('/\A(?:(?!' . Rfc5234::SP . '|\.|\[|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', (string) $name) !== 1) {
 				return false;
 			}
 
-			if (!$this->encodesValue($value, $name)) {
+			if (!$this->encodesValue($value, (string) $name)) {
 				return false;
 			}
 		}
@@ -138,23 +140,23 @@ readonly class Encoder implements EncoderInterface
 		}
 
 		foreach ($value as $key => $child) {
-			if (preg_match('/\A(?:(?!\]|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', $key) !== 1) {
+			if (preg_match('/\A(?:(?!\]|\x00|' . Rfc5234::CR . '|' . Rfc5234::LF . ').)+\z/s', (string) $key) !== 1) {
 				return false;
 			}
 
-			if (preg_match('/\A(?:' . Rfc5234::SP . '|' . Rfc5234::HTAB . '|\x0B|\x0C)\z/', $key) === 1) {
+			if (preg_match('/\A(?:' . Rfc5234::SP . '|' . Rfc5234::HTAB . '|\x0B|\x0C)\z/', (string) $key) === 1) {
 				return false;
 			}
 
 			if (
-				str_starts_with($key, '__Host-') &&
+				str_starts_with((string) $key, '__Host-') &&
 				!str_starts_with($name, '__Host-')
 			) {
 				return false;
 			}
 
 			if (
-				str_starts_with($key, '__Secure-') &&
+				str_starts_with((string) $key, '__Secure-') &&
 				!str_starts_with($name, '__Secure-')
 			) {
 				return false;

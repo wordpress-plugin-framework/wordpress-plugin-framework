@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Exceptions\Handler\ViewModels\Debug;
 
 use WordPressPluginFramework\View\Model\ModelInterface as ViewModelInterface;

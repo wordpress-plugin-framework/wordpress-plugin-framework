@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Localization\Translator;
 
 use WordPressPluginFramework\Localization\Formatter\FormatterInterface;

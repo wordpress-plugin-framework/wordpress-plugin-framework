@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace WordPressPluginFramework\Exceptions\Views;
 
 use WordPressPluginFramework\{
@@ -20,7 +22,7 @@ readonly class View implements RenderableInterface
     public static function createFromThrowable(Throwable $throwable): static
     {
         $message = $throwable->getMessage();
-        $code = $throwable->getCode();
+        $code = (string) $throwable->getCode();
         $messages = $throwable instanceof HasMessagesInterface ? $throwable->getMessages() : null;
 
         return new static($message, $code, $messages);
